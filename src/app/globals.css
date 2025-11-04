@@ -15,13 +15,13 @@
 
 body {
   @apply bg-[#f5f6ff] text-slate-900;
-  font-family: var(--font-body), "Quicksand", "Segoe UI", sans-serif;
+  font-family: var(--font-body), "Nunito", "Segoe UI", sans-serif;
   min-height: 100vh;
   margin: 0;
 }
 
 .font-heading {
-  font-family: var(--font-heading), "Fredoka", "Segoe UI", cursive;
+  font-family: var(--font-heading), "Baloo 2", "Segoe UI", cursive;
 }
 
 .reward-confetti {

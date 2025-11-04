@@ -1,24 +1,24 @@
 import type { Metadata } from "next";
-import { Fredoka, Quicksand } from "next/font/google";
+import { Baloo_2, Nunito } from "next/font/google";
 import "./globals.css";
 
-const heading = Fredoka({
-  subsets: ["latin"],
+const heading = Baloo_2({
+  subsets: ["latin", "latin-ext"],
   variable: "--font-heading",
-  weight: ["400", "500", "600", "700"],
+  weight: ["500", "600", "700", "800"],
   display: "swap",
 });
 
-const body = Quicksand({
-  subsets: ["latin"],
+const body = Nunito({
+  subsets: ["latin", "latin-ext"],
   variable: "--font-body",
   weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Morning Sparkles",
-  description: "A playful morning routine tracker designed for little preschool stars.",
+  title: "Poranne Iskierki",
+  description: "Radosny planer porannej rutyny dla przedszkolaka.",
 };
 
 export default function RootLayout({

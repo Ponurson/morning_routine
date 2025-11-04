@@ -14,43 +14,43 @@ type RoutineStep = {
 const ROUTINE_STEPS: RoutineStep[] = [
   {
     id: "wake",
-    title: "Rise & Shine",
-    description: "Wake up, stretch big, and peek at the sunshine.",
+    title: "Pobudka i przeciąganie",
+    description: "Obudź się, przeciągnij mocno i spójrz, czy świeci słoneczko.",
     icon: "🌞",
     gradient: "from-amber-100 via-orange-50 to-rose-100",
   },
   {
     id: "pee",
-    title: "Potty Break",
-    description: "Hop to the potty for a quick morning tinkle.",
+    title: "Skok do łazienki",
+    description: "Szybciutko na nocnik lub toaletę, żeby rozpocząć dzień lekko.",
     icon: "🚽",
     gradient: "from-sky-100 via-blue-50 to-teal-100",
   },
   {
     id: "wash",
-    title: "Sparkly Smile",
-    description: "Brush those tiny teeth and splash your cheeks.",
+    title: "Błyszczący uśmiech",
+    description: "Szoruj ząbki, umyj buzię i pozwól wodzie obudzić policzki.",
     icon: "🪥",
     gradient: "from-emerald-100 via-lime-50 to-sky-100",
   },
   {
     id: "dress",
-    title: "Dress-Up Time",
-    description: "Pick today’s outfit and button it with pride.",
+    title: "Czas na ubieranie",
+    description: "Wybierz strój na dziś i zapnij guziczki z dumą.",
     icon: "🧦",
     gradient: "from-violet-100 via-purple-50 to-pink-100",
   },
   {
     id: "eat",
-    title: "Yummy Breakfast",
-    description: "Fuel up with delicious bites and sips.",
+    title: "Pyszne śniadanko",
+    description: "Najedz się smakołykami i popij kubkiem energii.",
     icon: "🥣",
     gradient: "from-rose-100 via-pink-50 to-amber-100",
   },
   {
     id: "bag",
-    title: "Ready for Preschool",
-    description: "Pack your bag, grab your hugs, and zoom!",
+    title: "Gotowy do przedszkola",
+    description: "Spakuj plecak, przytul się mocno i w drogę!",
     icon: "🎒",
     gradient: "from-sky-100 via-indigo-50 to-purple-100",
   },
@@ -106,13 +106,13 @@ export default function Home() {
           </div>
           <div className="flex flex-col gap-2 text-left">
             <span className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-500">
-              Good Morning, Star!
+              Dzień dobry, gwiazdo!
             </span>
             <h1 className="font-heading text-3xl font-semibold leading-tight text-slate-900 sm:text-4xl">
-              Your Sparkly Routine
+              Twoja poranna przygoda
             </h1>
             <p className="text-sm text-slate-500 sm:text-base">
-              Tap a card each time you finish a step to light up the morning.
+              Dotykaj karty za każdym razem, gdy kończysz krok, a poranek rozbłyśnie.
             </p>
           </div>
         </header>
@@ -121,10 +121,10 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.25em] text-rose-400">
-                Progress
+                Postępy
               </p>
               <p className="font-heading text-2xl font-semibold text-slate-900">
-                {completedCount} / {ROUTINE_STEPS.length} steps
+                {completedCount} / {ROUTINE_STEPS.length} kroków
               </p>
             </div>
             <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-gradient-to-br from-amber-100 to-rose-100 text-xl font-semibold text-rose-500 shadow-inner">
@@ -162,7 +162,7 @@ export default function Home() {
                 </div>
                 <div className="flex-1">
                   <p className="text-xs font-semibold uppercase tracking-[0.4em] text-rose-300">
-                    Step {index + 1}
+                    Krok {index + 1}
                   </p>
                   <h2 className="font-heading text-xl font-semibold text-slate-900 sm:text-2xl">
                     {step.title}
@@ -192,10 +192,10 @@ export default function Home() {
           ) : (
             <div className="rounded-[34px] border-2 border-dashed border-rose-200/70 bg-white/70 px-6 py-8 text-center shadow-inner backdrop-blur-sm sm:px-8">
               <p className="font-heading text-xl text-rose-500 sm:text-2xl">
-                Finish every step to unlock your rainbow reward!
+                Wykonaj wszystkie kroki, aby odblokować tęczową nagrodę!
               </p>
               <p className="mt-2 text-sm text-slate-500 sm:text-base">
-                Each tap lights up your morning like a sprinkle of fairy dust.
+                Każde dotknięcie rozświetla poranek jak magiczny pyłek wróżki.
               </p>
             </div>
           )}
@@ -215,21 +215,21 @@ function RewardCard({ onReset }: RewardCardProps) {
       <RewardConfetti />
       <div className="relative z-10 flex flex-col items-center gap-3">
         <span className="text-sm font-semibold uppercase tracking-[0.5em] text-amber-500">
-          Reward Unlocked
+          Nagroda odblokowana
         </span>
         <span className="text-6xl sm:text-7xl">🌈</span>
         <h3 className="font-heading text-3xl font-semibold text-slate-900 sm:text-4xl">
-          Rainbow Super Star!
+          Tęczowa supergwiazda!
         </h3>
         <p className="text-sm text-slate-600 sm:text-base">
-          You completed every step—time for a happy dance and a big high five!
+          Wszystkie kroki gotowe — czas na taniec radości i wielką piąteczkę!
         </p>
         <button
           type="button"
           onClick={onReset}
           className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/80 px-5 py-2 text-sm font-semibold text-rose-500 shadow-md transition hover:bg-white"
         >
-          Do it again tomorrow ✨
+          Powtórz jutro ✨
         </button>
       </div>
     </div>
