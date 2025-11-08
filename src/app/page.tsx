@@ -56,7 +56,7 @@ const ROUTINE_STEPS: RoutineStep[] = [
   },
 ];
 
-type StepState = Record<string, boolean>;
+type SliderState = Record<string, number>;
 
 const confettiColors = [
   "#FFC875",
@@ -70,14 +70,29 @@ const confettiColors = [
 type ConfettiStyle = CSSProperties &
   Record<"--i" | "--confetti-color", string>;
 
+type SliderStyle = CSSProperties & { "--progress": string };
+
+const SLIDER_MAX = 100;
+
+const createInitialSliderState = (): SliderState =>
+  Object.fromEntries(ROUTINE_STEPS.map((step) => [step.id, 0]));
+
+const snapSliderValue = (value: number) => {
+  if (value <= 5) return 0;
+  if (value >= 95) return SLIDER_MAX;
+  return value;
+};
+
 export default function Home() {
-  const [stepState, setStepState] = useState<StepState>(() =>
-    Object.fromEntries(ROUTINE_STEPS.map((step) => [step.id, false]))
+  const [sliderState, setSliderState] = useState<SliderState>(() =>
+    createInitialSliderState()
   );
 
   const completedCount = useMemo(
-    () => ROUTINE_STEPS.filter((step) => stepState[step.id]).length,
-    [stepState]
+    () =>
+      ROUTINE_STEPS.filter((step) => sliderState[step.id] >= SLIDER_MAX)
+        .length,
+    [sliderState]
   );
 
   const progressPercent = Math.round(
@@ -85,14 +100,12 @@ export default function Home() {
   );
   const allDone = completedCount === ROUTINE_STEPS.length;
 
-  const toggleStep = (id: string) => {
-    setStepState((prev) => ({ ...prev, [id]: !prev[id] }));
+  const handleSliderChange = (id: string, value: number) => {
+    setSliderState((prev) => ({ ...prev, [id]: snapSliderValue(value) }));
   };
 
   const resetSteps = () => {
-    setStepState(
-      Object.fromEntries(ROUTINE_STEPS.map((step) => [step.id, false]))
-    );
+    setSliderState(createInitialSliderState());
   };
 
   return (
@@ -142,46 +155,67 @@ export default function Home() {
 
         <section className="flex flex-col gap-4">
           {ROUTINE_STEPS.map((step, index) => {
-            const isComplete = stepState[step.id];
+            const sliderProgress = sliderState[step.id];
+            const isComplete = sliderProgress >= SLIDER_MAX;
+            const sliderId = `routine-slider-${step.id}`;
+            const sliderStyle: SliderStyle = {
+              "--progress": `${sliderProgress}%`,
+            };
             return (
-              <button
+              <article
                 key={step.id}
-                type="button"
-                onClick={() => toggleStep(step.id)}
-                aria-pressed={isComplete}
-                className={`group relative flex items-center gap-4 rounded-[34px] border-2 px-5 py-4 text-left shadow-lg transition-all duration-300 focus:outline-none focus-visible:ring-4 sm:px-6 sm:py-5 ${
+                aria-live="polite"
+                className={`group relative flex flex-col gap-4 rounded-[34px] border-2 px-5 py-5 text-left shadow-lg transition-all duration-300 sm:flex-row sm:items-center sm:px-6 sm:py-6 ${
                   isComplete
-                    ? "border-transparent bg-gradient-to-br from-emerald-100 via-rose-100 to-sky-100 text-slate-900 focus-visible:ring-emerald-300/60"
-                    : "border-white/50 bg-white/70 text-slate-800 hover:-translate-y-1 hover:shadow-xl focus-visible:ring-sky-200/70"
+                    ? "border-transparent bg-gradient-to-br from-emerald-100 via-rose-100 to-sky-100 text-slate-900"
+                    : "border-white/50 bg-white/70 text-slate-800 hover:-translate-y-1 hover:shadow-xl"
                 }`}
               >
-                <div
-                  className={`flex h-16 w-16 items-center justify-center rounded-[26px] bg-gradient-to-br text-3xl shadow-md transition-transform duration-300 sm:h-20 sm:w-20 sm:text-4xl ${step.gradient}`}
-                >
-                  <span className="drop-shadow-sm">{step.icon}</span>
+                <div className="flex items-start gap-4">
+                  <div
+                    className={`flex h-16 w-16 items-center justify-center rounded-[26px] bg-gradient-to-br text-3xl shadow-md transition-transform duration-300 sm:h-20 sm:w-20 sm:text-4xl ${step.gradient}`}
+                  >
+                    <span className="drop-shadow-sm">{step.icon}</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs font-semibold uppercase tracking-[0.4em] text-rose-300">
+                      Krok {index + 1}
+                    </p>
+                    <h2 className="font-heading text-xl font-semibold text-slate-900 sm:text-2xl">
+                      {step.title}
+                    </h2>
+                    <p className="mt-1 text-sm text-slate-600 sm:text-base">
+                      {step.description}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-xs font-semibold uppercase tracking-[0.4em] text-rose-300">
-                    Krok {index + 1}
-                  </p>
-                  <h2 className="font-heading text-xl font-semibold text-slate-900 sm:text-2xl">
-                    {step.title}
-                  </h2>
-                  <p className="mt-1 text-sm text-slate-600 sm:text-base">
-                    {step.description}
-                  </p>
+                <div className="flex flex-col gap-3 sm:ml-auto sm:w-[220px]">
+                  <label
+                    htmlFor={sliderId}
+                    className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-300"
+                  >
+                    Przesun, aby {isComplete ? "cofnac" : "ukonczyc"} krok
+                  </label>
+                  <input
+                    id={sliderId}
+                    type="range"
+                    min={0}
+                    max={SLIDER_MAX}
+                    step={5}
+                    value={sliderProgress}
+                    onChange={(event) =>
+                      handleSliderChange(step.id, Number(event.target.value))
+                    }
+                    className="step-slider"
+                    style={sliderStyle}
+                    aria-valuetext={
+                      isComplete
+                        ? "Krok ukonczony"
+                        : `Postep ${sliderProgress} procent`
+                    }
+                  />
                 </div>
-                <span
-                  className={`flex h-12 w-12 items-center justify-center rounded-full border-2 text-lg font-semibold transition-all duration-300 sm:h-14 sm:w-14 ${
-                    isComplete
-                      ? "border-transparent bg-emerald-400 text-white shadow-lg"
-                      : "border-rose-200 bg-white/80 text-rose-200"
-                  }`}
-                  aria-hidden
-                >
-                  {isComplete ? "✓" : "★"}
-                </span>
-              </button>
+              </article>
             );
           })}
         </section>
@@ -317,3 +351,4 @@ function MorningBuddyIllustration() {
     </svg>
   );
 }
+
