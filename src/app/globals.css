@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: light;
-  --background: #f5f6ff;
-  --foreground: #2c254d;
+  color-scheme: dark;
+  --background: #0b0919;
+  --foreground: #f4f1ff;
 }
 
 @theme inline {
@@ -14,7 +14,7 @@
 }
 
 body {
-  @apply bg-[#f5f6ff] text-slate-900;
+  @apply bg-[#0b0919] text-[#f4f1ff];
   font-family: var(--font-body), "Nunito", "Segoe UI", sans-serif;
   min-height: 100vh;
   margin: 0;
@@ -78,11 +78,11 @@ body {
 .step-slider::-webkit-slider-runnable-track {
   height: 14px;
   border-radius: 9999px;
-  border: 1px solid rgba(244, 114, 182, 0.4);
+  border: 1px solid rgba(255, 159, 28, 0.4);
   background: linear-gradient(
     90deg,
-    #34d399 var(--progress),
-    #e2e8f0 var(--progress)
+    #ff9f1c var(--progress),
+    #1c1230 var(--progress)
   );
 }
 
@@ -91,9 +91,9 @@ body {
   width: 28px;
   height: 28px;
   border-radius: 9999px;
-  background: #ffffff;
-  border: 3px solid #fb7185;
-  box-shadow: 0 8px 20px rgba(251, 113, 133, 0.3);
+  background: #2b1733;
+  border: 3px solid #ff7a18;
+  box-shadow: 0 8px 20px rgba(255, 122, 24, 0.35);
   margin-top: -8px;
   transition: transform 0.2s ease;
 }
@@ -105,22 +105,22 @@ body {
 .step-slider::-moz-range-track {
   height: 14px;
   border-radius: 9999px;
-  border: 1px solid rgba(244, 114, 182, 0.4);
-  background: #e2e8f0;
+  border: 1px solid rgba(255, 159, 28, 0.4);
+  background: #1c1230;
 }
 
 .step-slider::-moz-range-progress {
   height: 14px;
   border-radius: 9999px;
-  background: #34d399;
+  background: #ff9f1c;
 }
 
 .step-slider::-moz-range-thumb {
   width: 28px;
   height: 28px;
   border-radius: 9999px;
-  background: #ffffff;
-  border: 3px solid #fb7185;
-  box-shadow: 0 8px 20px rgba(251, 113, 133, 0.3);
+  background: #2b1733;
+  border: 3px solid #ff7a18;
+  box-shadow: 0 8px 20px rgba(255, 122, 24, 0.35);
   transition: transform 0.2s ease;
 }

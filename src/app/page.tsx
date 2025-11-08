@@ -1,70 +1,87 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactElement } from "react";
+
+type IconName =
+  | "ghost"
+  | "cauldron"
+  | "fangs"
+  | "hat"
+  | "candy"
+  | "lantern";
+
+type IconProps = {
+  className?: string;
+};
 
 type RoutineStep = {
   id: string;
   title: string;
   description: string;
-  icon: string;
+  icon: IconName;
   gradient: string;
 };
 
 const ROUTINE_STEPS: RoutineStep[] = [
   {
     id: "wake",
-    title: "Pobudka i przeciąganie",
-    description: "Obudź się, przeciągnij mocno i spójrz, czy świeci słoneczko.",
-    icon: "🌞",
-    gradient: "from-amber-100 via-orange-50 to-rose-100",
+    title: "Obudź małego duszka",
+    description:
+      "Rozciągnij skrzydła nietoperza, weź głęboki oddech i przepędź noc.",
+    icon: "ghost",
+    gradient: "from-[#3d1b47] via-[#4b213d] to-[#ff7a18]",
   },
   {
     id: "pee",
-    title: "Skok do łazienki",
-    description: "Szybciutko na nocnik lub toaletę, żeby rozpocząć dzień lekko.",
-    icon: "🚽",
-    gradient: "from-sky-100 via-blue-50 to-teal-100",
+    title: "Przystanek w tajnej pieczarze",
+    description:
+      "Pluskaj jak wodny stworek i zostaw za sobą bąbelkowy ślad.",
+    icon: "cauldron",
+    gradient: "from-[#1f2c3a] via-[#233a42] to-[#ff8400]",
   },
   {
     id: "wash",
-    title: "Błyszczący uśmiech",
-    description: "Szoruj ząbki, umyj buzię i pozwól wodzie obudzić policzki.",
-    icon: "🪥",
-    gradient: "from-emerald-100 via-lime-50 to-sky-100",
+    title: "Wypoleruj kły",
+    description:
+      "Wyszczotkuj upiorne zęby i zabłyśnij niczym gwiazda północy.",
+    icon: "fangs",
+    gradient: "from-[#23303d] via-[#36285a] to-[#ff6f61]",
   },
   {
     id: "dress",
-    title: "Czas na ubieranie",
-    description: "Wybierz strój na dziś i zapnij guziczki z dumą.",
-    icon: "🧦",
-    gradient: "from-violet-100 via-purple-50 to-pink-100",
+    title: "Załóż halloweenowy kostium",
+    description:
+      "Zwiąż pelerynę, napompuj kapelusz i szykuj się na psikusy.",
+    icon: "hat",
+    gradient: "from-[#2c1f3a] via-[#4d205a] to-[#ff9b54]",
   },
   {
     id: "eat",
-    title: "Pyszne śniadanko",
-    description: "Najedz się smakołykami i popij kubkiem energii.",
-    icon: "🥣",
-    gradient: "from-rose-100 via-pink-50 to-amber-100",
+    title: "Potworne śniadanie mocy",
+    description: "Chrupnij dyniowe płatki i popij żarzącą miksturę.",
+    icon: "candy",
+    gradient: "from-[#4b1d2f] via-[#7a1d35] to-[#ff6f00]",
   },
   {
     id: "bag",
-    title: "Gotowy do przedszkola",
-    description: "Spakuj plecak, przytul się mocno i w drogę!",
-    icon: "🎒",
-    gradient: "from-sky-100 via-indigo-50 to-purple-100",
+    title: "Spakuj torbę na psikusy",
+    description:
+      "Schowaj kredki, maski i ukochanego kłapouchego przyjaciela.",
+    icon: "lantern",
+    gradient: "from-[#1f1f3a] via-[#352455] to-[#ff8e32]",
   },
 ];
 
 type SliderState = Record<string, number>;
 
 const confettiColors = [
-  "#FFC875",
-  "#FF9FBB",
-  "#AFE6FF",
-  "#C4B5FF",
-  "#9FF5C2",
-  "#FFB482",
+  "#ff7a18",
+  "#ffbb33",
+  "#f25f5c",
+  "#7c3aed",
+  "#4c1d95",
+  "#ff9f1c",
 ];
 
 type ConfettiStyle = CSSProperties &
@@ -74,6 +91,15 @@ type SliderStyle = CSSProperties & { "--progress": string };
 
 const SLIDER_MAX = 100;
 
+const STEP_ICONS: Record<IconName, (props: IconProps) => ReactElement> = {
+  ghost: GhostIcon,
+  cauldron: CauldronIcon,
+  fangs: FangsIcon,
+  hat: WitchHatIcon,
+  candy: CandyIcon,
+  lantern: LanternIcon,
+};
+
 const createInitialSliderState = (): SliderState =>
   Object.fromEntries(ROUTINE_STEPS.map((step) => [step.id, 0]));
 
@@ -82,6 +108,17 @@ const snapSliderValue = (value: number) => {
   if (value >= 95) return SLIDER_MAX;
   return value;
 };
+
+function StepIcon({
+  name,
+  className,
+}: {
+  name: IconName;
+  className?: string;
+}): ReactElement {
+  const IconComponent = STEP_ICONS[name];
+  return <IconComponent className={className} />;
+}
 
 export default function Home() {
   const [sliderState, setSliderState] = useState<SliderState>(() =>
@@ -109,44 +146,44 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f6f8ff] via-[#fef6ff] to-[#f3fbff]">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#0b0a1a] via-[#1a0f2d] to-[#2d132c] text-[#f4f1ff]">
       <FloatingBackground />
 
       <main className="relative z-10 mx-auto flex min-h-screen w-full max-w-xl flex-col gap-9 px-4 pb-24 pt-14 sm:px-6">
-        <header className="flex items-center gap-4 rounded-[36px] bg-white/80 px-6 py-6 shadow-xl backdrop-blur-md sm:gap-6 sm:px-8">
+        <header className="flex items-center gap-4 rounded-[36px] border border-[#ff9f1c]/20 bg-[#1b142a]/80 px-6 py-6 shadow-xl shadow-[#ff7a18]/10 backdrop-blur-md sm:gap-6 sm:px-8">
           <div className="relative h-24 w-24 shrink-0 sm:h-28 sm:w-28">
             <MorningBuddyIllustration />
           </div>
           <div className="flex flex-col gap-2 text-left">
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-sky-500">
-              Dzień dobry, gwiazdo!
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ff9f1c]">
+              Dobry wieczór, mały potworku!
             </span>
-            <h1 className="font-heading text-3xl font-semibold leading-tight text-slate-900 sm:text-4xl">
-              Twoja poranna przygoda
+            <h1 className="font-heading text-3xl font-semibold leading-tight text-[#fef3c7] sm:text-4xl">
+              Halloweenowa misja poranka
             </h1>
-            <p className="text-sm text-slate-500 sm:text-base">
-              Dotykaj karty za każdym razem, gdy kończysz krok, a poranek rozbłyśnie.
+            <p className="text-sm text-[#d1c7ff] sm:text-base">
+              Przesuwaj karty, aby rozświetlić nawiedzony poranek.
             </p>
           </div>
         </header>
 
-        <section className="rounded-[34px] border border-white/60 bg-white/60 px-6 py-6 shadow-lg backdrop-blur-md sm:px-8">
+        <section className="rounded-[34px] border border-[#ff9f1c]/25 bg-[#1f1a30]/70 px-6 py-6 shadow-lg shadow-[#000]/40 backdrop-blur-md sm:px-8">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-rose-400">
-                Postępy
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#ff6f00]">
+                Postęp rytuału
               </p>
-              <p className="font-heading text-2xl font-semibold text-slate-900">
+              <p className="font-heading text-2xl font-semibold text-[#fef3c7]">
                 {completedCount} / {ROUTINE_STEPS.length} kroków
               </p>
             </div>
-            <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-gradient-to-br from-amber-100 to-rose-100 text-xl font-semibold text-rose-500 shadow-inner">
+            <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-gradient-to-br from-[#ff9f1c]/70 to-[#ff6f61]/70 text-xl font-semibold text-[#2b132c] shadow-inner">
               {progressPercent}%
             </div>
           </div>
-          <div className="mt-4 h-4 w-full overflow-hidden rounded-full bg-slate-200/60">
+          <div className="mt-4 h-4 w-full overflow-hidden rounded-full bg-[#2b213d]">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-emerald-300 via-rose-300 to-sky-300 transition-all duration-500 ease-out"
+              className="h-full rounded-full bg-gradient-to-r from-[#ff9f1c] via-[#ff6f61] to-[#7c3aed] transition-all duration-500 ease-out"
               style={{ width: `${progressPercent}%` }}
               aria-hidden
             />
@@ -167,24 +204,27 @@ export default function Home() {
                 aria-live="polite"
                 className={`group relative flex flex-col gap-4 rounded-[34px] border-2 px-5 py-5 text-left shadow-lg transition-all duration-300 sm:flex-row sm:items-center sm:px-6 sm:py-6 ${
                   isComplete
-                    ? "border-transparent bg-gradient-to-br from-emerald-100 via-rose-100 to-sky-100 text-slate-900"
-                    : "border-white/50 bg-white/70 text-slate-800 hover:-translate-y-1 hover:shadow-xl"
+                    ? "border-transparent bg-gradient-to-br from-[#3b1d4f] via-[#51235e] to-[#ff7a18] text-[#fff8dc]"
+                    : "border-[#ff9f1c]/20 bg-[#1c1530]/80 text-[#f4f1ff] hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(255,122,24,0.25)]"
                 }`}
               >
                 <div className="flex items-start gap-4">
                   <div
                     className={`flex h-16 w-16 items-center justify-center rounded-[26px] bg-gradient-to-br text-3xl shadow-md transition-transform duration-300 sm:h-20 sm:w-20 sm:text-4xl ${step.gradient}`}
                   >
-                    <span className="drop-shadow-sm">{step.icon}</span>
+                    <StepIcon
+                      name={step.icon}
+                      className="h-10 w-10 text-[#fff8dc] drop-shadow-[0_4px_12px_rgba(0,0,0,0.35)]"
+                    />
                   </div>
                   <div className="flex-1">
-                    <p className="text-xs font-semibold uppercase tracking-[0.4em] text-rose-300">
-                      Krok {index + 1}
+                    <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#ffb347]">
+                      Krok rytuału {index + 1}
                     </p>
-                    <h2 className="font-heading text-xl font-semibold text-slate-900 sm:text-2xl">
+                    <h2 className="font-heading text-xl font-semibold text-[#fff1d6] sm:text-2xl">
                       {step.title}
                     </h2>
-                    <p className="mt-1 text-sm text-slate-600 sm:text-base">
+                    <p className="mt-1 text-sm text-[#d6c7ff] sm:text-base">
                       {step.description}
                     </p>
                   </div>
@@ -192,26 +232,26 @@ export default function Home() {
                 <div className="flex flex-col gap-3 sm:ml-auto sm:w-[220px]">
                   <label
                     htmlFor={sliderId}
-                    className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-300"
+                    className="text-xs font-semibold uppercase tracking-[0.2em] text-[#ffa94d]"
                   >
-                    Przesun, aby {isComplete ? "cofnac" : "ukonczyc"} krok
+                    Przesuń suwak, aby {isComplete ? "cofnąć" : "domknąć"} rytuał
                   </label>
-                  <input
-                    id={sliderId}
-                    type="range"
-                    min={0}
-                    max={SLIDER_MAX}
-                    step={5}
-                    value={sliderProgress}
-                    onChange={(event) =>
-                      handleSliderChange(step.id, Number(event.target.value))
-                    }
-                    className="step-slider"
-                    style={sliderStyle}
+                <input
+                  id={sliderId}
+                  type="range"
+                  min={0}
+                  max={SLIDER_MAX}
+                  step={5}
+                  value={sliderProgress}
+                  onChange={(event) =>
+                    handleSliderChange(step.id, Number(event.target.value))
+                  }
+                  className="step-slider"
+                  style={sliderStyle}
                     aria-valuetext={
                       isComplete
-                        ? "Krok ukonczony"
-                        : `Postep ${sliderProgress} procent`
+                        ? "Krok ukończony"
+                        : `Upiorny postęp ${sliderProgress} procent`
                     }
                   />
                 </div>
@@ -224,12 +264,12 @@ export default function Home() {
           {allDone ? (
             <RewardCard onReset={resetSteps} />
           ) : (
-            <div className="rounded-[34px] border-2 border-dashed border-rose-200/70 bg-white/70 px-6 py-8 text-center shadow-inner backdrop-blur-sm sm:px-8">
-              <p className="font-heading text-xl text-rose-500 sm:text-2xl">
-                Wykonaj wszystkie kroki, aby odblokować tęczową nagrodę!
+            <div className="rounded-[34px] border-2 border-dashed border-[#ff9f1c]/30 bg-[#1a1126]/80 px-6 py-8 text-center shadow-inner shadow-[#000]/40 backdrop-blur-sm sm:px-8">
+              <p className="font-heading text-xl text-[#ff9f1c] sm:text-2xl">
+                Ukończ każdy krok rytuału, aby odblokować dyniową nagrodę!
               </p>
-              <p className="mt-2 text-sm text-slate-500 sm:text-base">
-                Każde dotknięcie rozświetla poranek jak magiczny pyłek wróżki.
+              <p className="mt-2 text-sm text-[#d6c7ff] sm:text-base">
+                Każde przesunięcie rozsypuje świecący w ciemności pył po całej kryjówce.
               </p>
             </div>
           )}
@@ -245,28 +285,243 @@ type RewardCardProps = {
 
 function RewardCard({ onReset }: RewardCardProps) {
   return (
-    <div className="relative overflow-hidden rounded-[34px] border border-amber-200/70 bg-gradient-to-br from-amber-100 via-pink-100 to-sky-100 px-6 py-9 text-center shadow-2xl backdrop-blur sm:px-10">
+    <div className="relative overflow-hidden rounded-[34px] border border-[#ff9f1c]/30 bg-gradient-to-br from-[#1f0f1f] via-[#351a3d] to-[#ff7a18] px-6 py-9 text-center shadow-2xl shadow-[#ff7a18]/20 backdrop-blur sm:px-10">
       <RewardConfetti />
       <div className="relative z-10 flex flex-col items-center gap-3">
-        <span className="text-sm font-semibold uppercase tracking-[0.5em] text-amber-500">
-          Nagroda odblokowana
+        <span className="text-sm font-semibold uppercase tracking-[0.5em] text-[#ffd166]">
+          Dyniowa nagroda odblokowana
         </span>
-        <span className="text-6xl sm:text-7xl">🌈</span>
-        <h3 className="font-heading text-3xl font-semibold text-slate-900 sm:text-4xl">
-          Tęczowa supergwiazda!
+        <PumpkinBadgeIcon className="h-16 w-16 text-[#fff1d6]" />
+        <h3 className="font-heading text-3xl font-semibold text-[#fff1d6] sm:text-4xl">
+          Bohater północy!
         </h3>
-        <p className="text-sm text-slate-600 sm:text-base">
-          Wszystkie kroki gotowe — czas na taniec radości i wielką piąteczkę!
+        <p className="text-sm text-[#f4f1ff] sm:text-base">
+          Każde upiorne zadanie wykonane ? czas zatańczyć i przybić dyniową piątkę!
         </p>
         <button
           type="button"
           onClick={onReset}
-          className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/80 px-5 py-2 text-sm font-semibold text-rose-500 shadow-md transition hover:bg-white"
+          className="mt-4 inline-flex items-center gap-2 rounded-full border border-[#ff9f1c]/30 bg-[#2b1733]/80 px-5 py-2 text-sm font-semibold text-[#ffb347] shadow-md shadow-[#ff7a18]/30 transition hover:bg-[#3b1f4a]"
         >
-          Powtórz jutro ✨
+          Zagraj ponownie jutro
         </button>
       </div>
     </div>
+  );
+}
+
+function GhostIcon({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 64 64"
+      aria-hidden
+      className={className}
+      fill="none"
+    >
+      <path
+        d="M18 22c0-10 8-18 18-18s18 8 18 18v20c0 4.4-3.6 8-8 8-3 0-4.9-1.4-6.5-3.2C37 48.4 35 50 32 50s-5-1.6-7.5-3.2C22.9 48.6 21 50 18 50c-4.4 0-8-3.6-8-8Z"
+        fill="currentColor"
+      />
+      <circle cx="26" cy="26" r="4" fill="#0b0a1a" />
+      <circle cx="38" cy="26" r="4" fill="#0b0a1a" />
+      <path
+        d="M24 36c2.5 2 5.3 3 8 3s5.5-1 8-3"
+        stroke="#0b0a1a"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M18 18c2-4 7.5-8 14-8s12 4 14 8"
+        stroke="#ffd166"
+        strokeWidth="3"
+        strokeLinecap="round"
+        opacity="0.35"
+      />
+    </svg>
+  );
+}
+
+function CauldronIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
+      <ellipse
+        cx="32"
+        cy="20"
+        rx="18"
+        ry="6"
+        fill="#ff9f1c"
+        opacity="0.5"
+      />
+      <path
+        d="M14 24c0-1.7 1.3-3 3-3h30c1.7 0 3 1.3 3 3v12c0 11-8.5 20-18 20s-18-9-18-20Z"
+        fill="currentColor"
+      />
+      <path
+        d="M18 24h28v6c0 7.2-6.3 13-14 13s-14-5.8-14-13Z"
+        fill="#2b1733"
+      />
+      <path
+        d="M10 40h10M44 40h10"
+        stroke="#ff7a18"
+        strokeWidth="4"
+        strokeLinecap="round"
+      />
+      <circle cx="24" cy="15" r="3" fill="#ffd166" />
+      <circle cx="34" cy="12" r="4" fill="#ff7a18" opacity="0.7" />
+    </svg>
+  );
+}
+
+function FangsIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
+      <rect
+        x="10"
+        y="14"
+        width="44"
+        height="26"
+        rx="13"
+        fill="currentColor"
+      />
+      <path
+        d="M16 40c0-6 4.5-10 16-10s16 4 16 10v10c0 1.1-0.9 2-2 2-2.5 0-3.8-1.7-4.8-3.7-0.8-1.6-2.5-1.6-3.3 0-1 2-2.3 3.7-4.8 3.7s-3.8-1.7-4.8-3.7c-0.8-1.6-2.5-1.6-3.3 0-1 2-2.3 3.7-4.8 3.7-1.1 0-2-0.9-2-2Z"
+        fill="#fdf2d0"
+      />
+      <circle cx="24" cy="26" r="3" fill="#0b0a1a" />
+      <circle cx="40" cy="26" r="3" fill="#0b0a1a" />
+      <path
+        d="M22 20c3-2 7-3 10-3s7 1 10 3"
+        stroke="#ffd166"
+        strokeWidth="3"
+        strokeLinecap="round"
+        opacity="0.4"
+      />
+    </svg>
+  );
+}
+
+function WitchHatIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
+      <path
+        d="M28 8c-1.7 6-5 16-11 26h30C41 22 37 14 34 8c-1.5-3-4.5-3-6 0Z"
+        fill="currentColor"
+      />
+      <ellipse
+        cx="32"
+        cy="40"
+        rx="22"
+        ry="6"
+        fill="#3f1f58"
+        opacity="0.7"
+      />
+      <rect
+        x="18"
+        y="32"
+        width="28"
+        height="6"
+        rx="3"
+        fill="#ff7a18"
+      />
+      <rect
+        x="29"
+        y="32"
+        width="6"
+        height="6"
+        fill="#ffd166"
+        rx="1"
+      />
+    </svg>
+  );
+}
+
+function CandyIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
+      <rect
+        x="14"
+        y="22"
+        width="36"
+        height="20"
+        rx="10"
+        fill="currentColor"
+      />
+      <path
+        d="M14 26c4 0 6-6 6-10-4 0-6 6-6 10Zm36 0c-4 0-6-6-6-10 4 0 6 6 6 10Zm-36 12c4 0 6 6 6 10-4 0-6-6-6-10Zm36 0c-4 0-6 6-6 10 4 0 6-6 6-10Z"
+        fill="#ff9f1c"
+      />
+      <path
+        d="M22 32c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10-10-4.5-10-10Z"
+        fill="#2b1733"
+      />
+      <path
+        d="M24 32c0-4.4 3.6-8 8-8"
+        stroke="#ffd166"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function LanternIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
+      <rect
+        x="20"
+        y="18"
+        width="24"
+        height="34"
+        rx="6"
+        fill="currentColor"
+      />
+      <rect
+        x="26"
+        y="24"
+        width="12"
+        height="22"
+        rx="6"
+        fill="#ff9f1c"
+      />
+      <path
+        d="M24 12c0-3.3 2.7-6 6-6h4c3.3 0 6 2.7 6 6v4H24Z"
+        stroke="#ffd166"
+        strokeWidth="3"
+      />
+      <path
+        d="M18 44c-2 3.5-6 7-10 8m48 0c-4-1-8-4.5-10-8"
+        stroke="#ff7a18"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function PumpkinBadgeIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 72 72" aria-hidden className={className} fill="none">
+      <circle cx="36" cy="36" r="30" fill="#2b1733" />
+      <circle cx="36" cy="34" r="22" fill="#ff7a18" />
+      <path
+        d="M28 20c2-3 6-6 8-6s6 3 8 6"
+        stroke="#ffd166"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M24 34c0-7.5 5.5-13.5 12-13.5S48 26.5 48 34v10c0 5-1.8 9-5 9-2.5 0-4-1.3-5.4-3-1.4 1.7-2.9 3-5.4 3-3.2 0-5-4-5-9Z"
+        fill="#ffb347"
+      />
+      <circle cx="30" cy="36" r="3" fill="#2b1733" />
+      <circle cx="42" cy="36" r="3" fill="#2b1733" />
+      <path
+        d="M30 42c2 1 4 1.5 6 1.5s4-0.5 6-1.5"
+        stroke="#2b1733"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+    </svg>
   );
 }
 
@@ -291,9 +546,9 @@ function RewardConfetti() {
 function FloatingBackground() {
   return (
     <>
-      <div className="pointer-events-none absolute -left-24 top-16 h-56 w-56 rounded-full bg-pink-200/50 blur-3xl sm:-left-16 sm:h-72 sm:w-72" />
-      <div className="pointer-events-none absolute -right-32 top-36 h-64 w-64 rounded-full bg-sky-200/60 blur-3xl sm:-right-24 sm:top-20 sm:h-80 sm:w-80" />
-      <div className="pointer-events-none absolute bottom-10 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-amber-100/60 blur-3xl sm:bottom-20 sm:h-96 sm:w-96" />
+      <div className="pointer-events-none absolute -left-24 top-16 h-56 w-56 rounded-full bg-[#ff6f3c]/30 blur-3xl sm:-left-16 sm:h-72 sm:w-72" />
+      <div className="pointer-events-none absolute -right-32 top-36 h-64 w-64 rounded-full bg-[#6d28d9]/35 blur-3xl sm:-right-24 sm:top-20 sm:h-80 sm:w-80" />
+      <div className="pointer-events-none absolute bottom-10 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-[#ff9f1c]/25 blur-3xl sm:bottom-20 sm:h-96 sm:w-96" />
     </>
   );
 }
@@ -303,52 +558,110 @@ function MorningBuddyIllustration() {
     <svg
       viewBox="0 0 140 140"
       xmlns="http://www.w3.org/2000/svg"
-      className="h-full w-full drop-shadow-[0_12px_24px_rgba(255,182,193,0.45)]"
+      className="h-full w-full drop-shadow-[0_12px_32px_rgba(255,122,24,0.35)]"
     >
       <defs>
-        <linearGradient id="buddyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#ffeab5" />
-          <stop offset="100%" stopColor="#ffbde1" />
-        </linearGradient>
-        <radialGradient id="buddyGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#fff7d1" />
-          <stop offset="100%" stopColor="#ffbdd2" stopOpacity="0.35" />
+        <radialGradient id="pumpkinGlow" cx="50%" cy="50%" r="60%">
+          <stop offset="0%" stopColor="#ffdda1" stopOpacity="0.9" />
+          <stop offset="100%" stopColor="#ff7a18" stopOpacity="0.6" />
         </radialGradient>
+        <linearGradient id="pumpkinSkin" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#ff6f1d" />
+          <stop offset="1" stopColor="#c2410c" />
+        </linearGradient>
+        <linearGradient id="hatGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#6d28d9" />
+          <stop offset="100%" stopColor="#3b0764" />
+        </linearGradient>
       </defs>
 
-      <circle cx="70" cy="70" r="60" fill="url(#buddyGradient)" />
-      <circle
-        cx="70"
-        cy="70"
-        r="56"
-        fill="url(#buddyGlow)"
-        opacity="0.5"
-      />
-      <ellipse cx="70" cy="82" rx="34" ry="22" fill="#ffffff" opacity="0.65" />
-      <ellipse cx="50" cy="62" rx="8" ry="10" fill="#31315b" />
-      <ellipse cx="90" cy="62" rx="8" ry="10" fill="#31315b" />
-      <circle cx="48" cy="60" r="3" fill="#ffffff" />
-      <circle cx="88" cy="60" r="3" fill="#ffffff" />
+      <circle cx="70" cy="78" r="46" fill="url(#pumpkinSkin)" />
+      <circle cx="70" cy="72" r="55" fill="url(#pumpkinGlow)" opacity="0.35" />
+      <ellipse cx="70" cy="95" rx="34" ry="18" fill="#fef3c7" opacity="0.2" />
+
       <path
-        d="M55 92 C62 98, 78 98, 85 92"
-        stroke="#ff7a9f"
+        d="M42 78 C44 56, 96 56, 98 78"
+        stroke="#451a03"
         strokeWidth="5"
-        strokeLinecap="round"
         fill="none"
+        strokeLinecap="round"
       />
       <path
-        d="M38 45 Q70 20, 102 45"
-        stroke="#ffe5f1"
-        strokeWidth="10"
+        d="M52 104 C60 110, 80 110, 88 104"
+        stroke="#2d0d27"
+        strokeWidth="6"
         strokeLinecap="round"
         fill="none"
       />
-      <circle cx="45" cy="82" r="8" fill="#ffcfdf" opacity="0.7" />
-      <circle cx="95" cy="82" r="8" fill="#ffcfdf" opacity="0.7" />
-      <circle cx="32" cy="90" r="6" fill="#fff4d6" opacity="0.8" />
-      <circle cx="108" cy="90" r="6" fill="#fff4d6" opacity="0.8" />
-      <circle cx="70" cy="28" r="7" fill="#fff4d6" opacity="0.85" />
+      <ellipse cx="53" cy="79" rx="9" ry="11" fill="#1c0f2d" />
+      <ellipse cx="87" cy="79" rx="9" ry="11" fill="#1c0f2d" />
+      <circle cx="50" cy="76" r="3" fill="#ffddbf" />
+      <circle cx="84" cy="76" r="3" fill="#ffddbf" />
+
+      <path
+        d="M49 44 L91 44 L104 58 L36 58 Z"
+        fill="url(#hatGradient)"
+        stroke="#a855f7"
+        strokeWidth="4"
+        strokeLinejoin="round"
+      />
+      <rect
+        x="46"
+        y="34"
+        width="48"
+        height="12"
+        rx="4"
+        fill="url(#hatGradient)"
+        stroke="#a855f7"
+        strokeWidth="3"
+      />
+      <rect x="65" y="28" width="10" height="12" rx="3" fill="#2f0d22" />
+      <circle cx="34" cy="100" r="8" fill="#ff9f1c" opacity="0.6" />
+      <circle cx="106" cy="100" r="8" fill="#7c3aed" opacity="0.5" />
     </svg>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
