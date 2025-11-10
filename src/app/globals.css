@@ -2,8 +2,8 @@
 
 :root {
   color-scheme: dark;
-  --background: #0b0919;
-  --foreground: #f4f1ff;
+  --background: #020b1c;
+  --foreground: #f5fbff;
 }
 
 @theme inline {
@@ -14,14 +14,50 @@
 }
 
 body {
-  @apply bg-[#0b0919] text-[#f4f1ff];
   font-family: var(--font-body), "Nunito", "Segoe UI", sans-serif;
   min-height: 100vh;
   margin: 0;
+  color: var(--foreground);
+  background: linear-gradient(180deg, #020b1c 0%, #041a3d 45%, #0b3561 100%);
 }
 
 .font-heading {
   font-family: var(--font-heading), "Baloo 2", "Segoe UI", cursive;
+}
+
+.snowfall {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.snowflake {
+  position: absolute;
+  top: -10%;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.05) 70%
+  );
+  animation: snowfall linear infinite;
+  filter: drop-shadow(0 0 8px rgba(155, 219, 255, 0.7));
+  opacity: 0.85;
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translate3d(0, -10%, 0) scale(0.6);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(-8px, 110vh, 0) scale(1);
+    opacity: 0;
+  }
 }
 
 .reward-confetti {
@@ -33,14 +69,15 @@ body {
 
 .reward-confetti span {
   position: absolute;
-  width: 12px;
-  height: 24px;
+  width: 8px;
+  height: 18px;
   border-radius: 9999px;
   opacity: 0;
   transform: translate3d(0, 20px, 0) rotate(0deg);
   background: var(--confetti-color);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.35);
   animation: confetti-pop 3.6s ease-in-out infinite;
-  animation-delay: calc(var(--i) * 0.15s);
+  animation-delay: calc(var(--i) * 0.18s);
 }
 
 @keyframes confetti-pop {
@@ -48,13 +85,13 @@ body {
     opacity: 0;
     transform: translate3d(0, 40px, 0) rotate(-8deg);
   }
-  20% {
+  30% {
     opacity: 1;
-    transform: translate3d(-6px, 0, 0) rotate(8deg);
+    transform: translate3d(-6px, -6px, 0) rotate(6deg);
   }
-  50% {
+  60% {
     opacity: 0.9;
-    transform: translate3d(12px, -50px, 0) rotate(-12deg);
+    transform: translate3d(8px, -48px, 0) rotate(-10deg);
   }
   100% {
     opacity: 0;
@@ -78,11 +115,11 @@ body {
 .step-slider::-webkit-slider-runnable-track {
   height: 14px;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 159, 28, 0.4);
+  border: 1px solid rgba(154, 215, 255, 0.5);
   background: linear-gradient(
     90deg,
-    #ff9f1c var(--progress),
-    #1c1230 var(--progress)
+    #9ad7ff var(--progress),
+    rgba(255, 255, 255, 0.08) var(--progress)
   );
 }
 
@@ -91,36 +128,37 @@ body {
   width: 28px;
   height: 28px;
   border-radius: 9999px;
-  background: #2b1733;
-  border: 3px solid #ff7a18;
-  box-shadow: 0 8px 20px rgba(255, 122, 24, 0.35);
+  background: #0f2d52;
+  border: 3px solid #9ad7ff;
+  box-shadow: 0 10px 24px rgba(12, 40, 78, 0.45);
   margin-top: -8px;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .step-slider:active::-webkit-slider-thumb {
   transform: scale(1.05);
+  box-shadow: 0 12px 28px rgba(12, 40, 78, 0.6);
 }
 
 .step-slider::-moz-range-track {
   height: 14px;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 159, 28, 0.4);
-  background: #1c1230;
+  border: 1px solid rgba(154, 215, 255, 0.5);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .step-slider::-moz-range-progress {
   height: 14px;
   border-radius: 9999px;
-  background: #ff9f1c;
+  background: #9ad7ff;
 }
 
 .step-slider::-moz-range-thumb {
   width: 28px;
   height: 28px;
   border-radius: 9999px;
-  background: #2b1733;
-  border: 3px solid #ff7a18;
-  box-shadow: 0 8px 20px rgba(255, 122, 24, 0.35);
-  transition: transform 0.2s ease;
+  background: #0f2d52;
+  border: 3px solid #9ad7ff;
+  box-shadow: 0 10px 24px rgba(12, 40, 78, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
