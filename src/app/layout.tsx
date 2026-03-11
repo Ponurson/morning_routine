@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { Baloo_2, Nunito } from "next/font/google";
+import { Cormorant_Garamond, Noto_Serif } from "next/font/google";
 import "./globals.css";
 
-const heading = Baloo_2({
+const heading = Cormorant_Garamond({
   subsets: ["latin", "latin-ext"],
   variable: "--font-heading",
-  weight: ["500", "600", "700", "800"],
+  weight: ["500", "600", "700"],
   display: "swap",
 });
 
-const body = Nunito({
+const body = Noto_Serif({
   subsets: ["latin", "latin-ext"],
   variable: "--font-body",
   weight: ["400", "500", "600", "700"],
@@ -17,8 +17,9 @@ const body = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Poranne Iskierki",
-  description: "Radosny planer porannej rutyny dla przedszkolaka.",
+  title: "Poranny Kodeks",
+  description:
+    "Pergaminowa karta porannej rutyny z pełnym wsparciem dla polskich znaków.",
 };
 
 export default function RootLayout({
@@ -27,10 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${heading.variable} ${body.variable} antialiased bg-[#f5f6ff] text-slate-900`}
-      >
+    <html lang="pl">
+      <body className={`${heading.variable} ${body.variable} antialiased`}>
         {children}
       </body>
     </html>

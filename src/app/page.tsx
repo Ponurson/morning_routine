@@ -4,13 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { CSSProperties, ReactElement } from "react";
 
-type IconName =
-  | "firework"
-  | "toast"
-  | "sparkle"
-  | "mask"
-  | "confetti"
-  | "wish";
+type IconName = "sun" | "water" | "brush" | "cloak" | "feast" | "satchel";
 
 type IconProps = {
   className?: string;
@@ -21,95 +15,97 @@ type RoutineStep = {
   title: string;
   description: string;
   icon: IconName;
-  gradient: string;
+  accent: string;
+  initial: string;
 };
 
 const ROUTINE_STEPS: RoutineStep[] = [
   {
     id: "wake",
-    title: "Pobudka przy blasku fajerwerków",
+    title: "Powitanie świtu",
     description:
-      "Odsłoń zasłony, przeciągnij się i przywitaj dzień jak po wielkiej nocy.",
-    icon: "sparkle",
-    gradient: "from-[#ffd58a] via-[#ffb870] to-[#ff8f5a]",
+      "Rozsuń zasłony, przeciągnij się i wpuść pierwsze światło do komnaty.",
+    icon: "sun",
+    accent: "from-[#f0d28b] via-[#ca9f4f] to-[#8b5623]",
+    initial: "P",
   },
   {
-    id: "bathroom",
-    title: "Szybki przystanek w łazience",
+    id: "wash",
+    title: "Źródlana świeżość",
     description:
-      "Wpadnij na chwilę, umyj rączki i poczuj noworoczną świeżość.",
-    icon: "confetti",
-    gradient: "from-[#ffe2a3] via-[#ffc67c] to-[#ff9b5c]",
+      "Odwiedź umywalnię, obmyj dłonie i twarz, by zacząć dzień z czystą kartą.",
+    icon: "water",
+    accent: "from-[#d8d6b2] via-[#9ea17a] to-[#676945]",
+    initial: "Ź",
   },
   {
-    id: "teeth",
-    title: "Rozbłyśnij uśmiechem",
+    id: "smile",
+    title: "Rycerski uśmiech",
     description:
-      "Wyszczotkuj zęby, by świeciły jak nocne iskierki.",
-    icon: "firework",
-    gradient: "from-[#ffe6d3] via-[#ffd0b3] to-[#ffa98f]",
+      "Wyszoruj zęby starannie, aby uśmiech lśnił jak polerowana zbroja.",
+    icon: "brush",
+    accent: "from-[#f3e1bf] via-[#d5b179] to-[#966132]",
+    initial: "R",
   },
   {
     id: "dress",
-    title: "Ubierz się na nowy dzień",
+    title: "Szata na dzień",
     description:
-      "Wybierz strój, popraw warkocz i dodaj odrobinę blasku.",
-    icon: "mask",
-    gradient: "from-[#ffecd9] via-[#ffd9a8] to-[#ffc178]",
+      "Wybierz wygodne ubranie, popraw kołnierz i przygotuj się do wyjścia.",
+    icon: "cloak",
+    accent: "from-[#d5bea7] via-[#a27a5d] to-[#6a4631]",
+    initial: "S",
   },
   {
     id: "breakfast",
-    title: "Śniadaniowa energia",
+    title: "Uczta o świcie",
     description:
-      "Zjedz śniadanie i wypij ciepły napój, jak toast na dobry start.",
-    icon: "toast",
-    gradient: "from-[#ffd8a0] via-[#ffbfa1] to-[#ff8f8a]",
+      "Zjedz pożywne śniadanie i wypij ciepły napój przed dalszą drogą.",
+    icon: "feast",
+    accent: "from-[#f1d39c] via-[#d39b4d] to-[#8d4e21]",
+    initial: "U",
   },
   {
     id: "bag",
-    title: "Spakuj plecak",
+    title: "Sakwa gotowa",
     description:
-      "Schowaj zeszyty, przekąskę i ulubioną maskotkę na dalszą drogę.",
-    icon: "wish",
-    gradient: "from-[#ffe0b7] via-[#ffc48f] to-[#ff9872]",
+      "Spakuj plecak, zeszyty i drobiazgi, żeby nic nie zaginęło po drodze.",
+    icon: "satchel",
+    accent: "from-[#e6d2aa] via-[#bc9a62] to-[#7a5128]",
+    initial: "S",
   },
 ];
 
 type CompletionState = Record<string, boolean>;
 type BurstState = Record<string, number>;
 
-const confettiColors = [
-  "#ffe7b3",
-  "#ffcc7a",
-  "#ffb07c",
-  "#ff8c8c",
-  "#ffd6a6",
-  "#f4b56a",
+type GildingStyle = CSSProperties & Record<"--i" | "--flake-color", string>;
+
+const gildingColors = [
+  "#f5df9b",
+  "#e0b865",
+  "#d19b43",
+  "#f3e7c3",
+  "#c58a37",
 ];
 
-type ConfettiStyle = CSSProperties &
-  Record<"--i" | "--confetti-color", string>;
-
 const STEP_ICONS: Record<IconName, (props: IconProps) => ReactElement> = {
-  firework: FireworkIcon,
-  toast: ToastIcon,
-  sparkle: SparkleIcon,
-  mask: MaskIcon,
-  confetti: ConfettiIcon,
-  wish: WishIcon,
+  sun: SunIcon,
+  water: WaterIcon,
+  brush: BrushIcon,
+  cloak: CloakIcon,
+  feast: FeastIcon,
+  satchel: SatchelIcon,
 };
 
-const FIREWORKS: CSSProperties[] = Array.from(
-  { length: 12 },
-  (_, index): CSSProperties => {
-    const left = (index * 13) % 100;
-    const top = 8 + ((index * 11) % 55);
-    return {
-      left: `${left}%`,
-      top: `${top}%`,
-      animationDelay: `${index * 0.6}s`,
-    };
-  }
+const FLOATING_MOTES: CSSProperties[] = Array.from(
+  { length: 18 },
+  (_, index): CSSProperties => ({
+    left: `${4 + ((index * 11) % 92)}%`,
+    top: `${6 + ((index * 9) % 82)}%`,
+    animationDelay: `${index * 0.45}s`,
+    animationDuration: `${6 + (index % 5)}s`,
+  })
 );
 
 const createInitialCompletionState = (): CompletionState =>
@@ -117,6 +113,30 @@ const createInitialCompletionState = (): CompletionState =>
 
 const createInitialBurstState = (): BurstState =>
   Object.fromEntries(ROUTINE_STEPS.map((step) => [step.id, 0]));
+
+const getPolishCountWord = (
+  value: number,
+  one: string,
+  few: string,
+  many: string
+): string => {
+  const remainder10 = value % 10;
+  const remainder100 = value % 100;
+
+  if (value === 1) {
+    return one;
+  }
+
+  if (
+    remainder10 >= 2 &&
+    remainder10 <= 4 &&
+    (remainder100 < 12 || remainder100 > 14)
+  ) {
+    return few;
+  }
+
+  return many;
+};
 
 function StepIcon({
   name,
@@ -143,21 +163,25 @@ export default function Home() {
     [completionState]
   );
 
+  const remainingCount = ROUTINE_STEPS.length - completedCount;
   const progressPercent = Math.round(
     (completedCount / ROUTINE_STEPS.length) * 100
   );
   const allDone = completedCount === ROUTINE_STEPS.length;
+  const nextStep = ROUTINE_STEPS.find((step) => !completionState[step.id]);
 
   const handleTileToggle = (id: string) => {
-    setCompletionState((prev) => {
-      const nextValue = !prev[id];
+    setCompletionState((previous) => {
+      const nextValue = !previous[id];
+
       if (nextValue) {
         setBurstState((bursts) => ({
           ...bursts,
           [id]: (bursts[id] ?? 0) + 1,
         }));
       }
-      return { ...prev, [id]: nextValue };
+
+      return { ...previous, [id]: nextValue };
     });
   };
 
@@ -167,164 +191,282 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#09050f] text-[#fdf7ec]">
-      <FireworksBackground />
+    <div className="relative min-h-screen overflow-hidden text-[#452715]">
+      <ManuscriptBackground />
 
-      <main className="relative z-10 mx-auto flex min-h-screen w-full max-w-2xl flex-col gap-9 px-4 pb-24 pt-14 sm:px-6">
-        <header className="flex items-center gap-4 rounded-[36px] border border-white/10 bg-white/5 px-6 py-6 shadow-[0_24px_60px_rgba(12,6,20,0.6)] backdrop-blur-xl sm:gap-6 sm:px-8">
-          <div className="relative h-24 w-24 shrink-0 sm:h-28 sm:w-28">
-            <MorningBuddyIllustration />
-          </div>
-          <div className="flex flex-col gap-2 text-left">
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ffd59a]">
-              Witaj, celebrująca duszo!
-            </span>
-            <h1 className="font-heading text-2xl font-semibold leading-tight text-white sm:text-4xl">
-              Sylwestrowy Rozruch
-            </h1>
-            <p className="text-sm text-[#f9e6c7] sm:text-base">
-              Klikaj karty, aby wejść w poranek jak po wielkiej nocy.
-            </p>
-          </div>
-        </header>
+      <main className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl items-start px-3 py-4 sm:px-6 sm:py-8">
+        <div className="relative w-full overflow-hidden rounded-[32px] border border-[#8b5a2b]/30 bg-[#f8efdc]/88 px-4 py-6 shadow-[0_28px_90px_rgba(88,54,19,0.22)] backdrop-blur-[2px] sm:px-8 sm:py-8 lg:px-12 lg:py-10">
+          <FrameOrnaments />
 
-        <section className="rounded-[34px] border border-white/10 bg-white/5 px-6 py-6 shadow-lg shadow-[#140817]/60 backdrop-blur-lg sm:px-8">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#ffd59a]">
-                Postęp poranka
+          <header className="relative grid gap-8 border-b border-[#9f7b4a]/30 pb-8 lg:grid-cols-[minmax(0,1.6fr)_minmax(280px,0.9fr)]">
+            <div className="relative">
+              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#8e6234]">
+                Karta porannego obrządku
               </p>
-              <p className="font-heading text-2xl font-semibold text-white">
-                {completedCount} / {ROUTINE_STEPS.length} momentów
+              <h1 className="font-heading mt-4 text-5xl leading-none text-[#4b2c18] sm:text-6xl lg:text-7xl">
+                Poranny Kodeks
+              </h1>
+              <p className="mt-5 max-w-2xl text-base leading-8 text-[#643f24] sm:text-lg">
+                <span className="illuminated-initial">N</span>
+                iech ten pergamin prowadzi przez kolejne zwyczaje poranka:
+                światło, świeżość, odwaga, strój, śniadanie i gotowość do
+                wyjścia. Każda ukończona karta przybliża do złoconej pieczęci
+                dnia.
               </p>
-            </div>
-            <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-gradient-to-br from-[#ffd59a] to-[#ff9a7d] text-xl font-semibold text-[#2b1539] shadow-inner shadow-white/40">
-              {progressPercent}%
-            </div>
-          </div>
-          <div className="mt-4 h-4 w-full overflow-hidden rounded-full bg-white/10">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-[#ffd59a] via-[#ffb07c] to-[#ff8c8c] transition-all duration-500 ease-out"
-              style={{ width: `${progressPercent}%` }}
-              aria-hidden
-            />
-          </div>
-        </section>
 
-        <section className="flex flex-col gap-4">
-          {ROUTINE_STEPS.map((step, index) => {
-            const isComplete = completionState[step.id];
-            const burstKey = `${step.id}-${burstState[step.id] ?? 0}`;
-            return (
-              <article
-                key={step.id}
-                aria-live="polite"
-                role="button"
-                tabIndex={0}
-                aria-pressed={isComplete}
-                onClick={() => handleTileToggle(step.id)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    handleTileToggle(step.id);
-                  }
-                }}
-                className={`group relative flex flex-col gap-4 rounded-[34px] border px-5 py-5 text-left shadow-lg transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ffd59a]/70 sm:flex-row sm:items-center sm:px-6 sm:py-6 ${
-                  isComplete
-                    ? "border-transparent bg-gradient-to-br from-[#ffe4b3]/90 via-[#ffc48f]/95 to-[#ff9d7a] text-[#2b1539]"
-                    : "border-white/10 bg-white/5 text-[#fdf7ec] hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(31,14,45,0.4)]"
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <div
-                    className={`flex h-16 w-16 items-center justify-center rounded-[26px] bg-gradient-to-br text-3xl shadow-md shadow-black/30 transition-transform duration-300 sm:h-20 sm:w-20 sm:text-4xl ${step.gradient}`}
-                  >
-                    <StepIcon
-                      name={step.icon}
-                      className={`h-10 w-10 ${
-                        isComplete ? "text-[#2b1539]" : "text-white"
-                      } drop-shadow-[0_4px_16px_rgba(20,8,24,0.35)]`}
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#ffd59a]">
-                      Etap poranka {index + 1}
-                    </p>
-                    <h2 className="font-heading text-xl font-semibold text-current sm:text-2xl">
-                      {step.title}
-                    </h2>
-                    <p
-                      className={`mt-1 text-sm sm:text-base ${
-                        isComplete ? "text-[#2b1539]" : "text-[#f7e3c0]"
-                      }`}
-                    >
-                      {step.description}
-                    </p>
-                  </div>
-                </div>
-                {isComplete ? (
-                  <div
-                    key={burstKey}
-                    className="firework-burst"
-                    aria-hidden
-                  >
-                    {Array.from({ length: 8 }).map((_, index) => (
-                      <span key={index} />
-                    ))}
-                  </div>
-                ) : null}
-                <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#ffd59a] sm:ml-auto sm:w-[220px] sm:justify-end">
-                  {isComplete ? "Zrobione!" : "Kliknij, aby ukończyć"}
-                </div>
-              </article>
-            );
-          })}
-        </section>
-
-        <section className="relative mt-4">
-          {allDone ? (
-            <RewardCard onReset={resetSteps} />
-          ) : (
-            <div className="rounded-[34px] border-2 border-dashed border-white/20 bg-white/5 px-6 py-8 text-center shadow-inner shadow-[#0a040f]/60 backdrop-blur-sm sm:px-8">
-                <p className="font-heading text-xl text-[#ffd59a] sm:text-2xl">
-                  Ukończ każdy krok, aby odsłonić nagrodę!
-                </p>
-                <p className="mt-2 text-sm text-[#f7e3c0] sm:text-base">
-                  Każde kliknięcie dodaje blasku i pomaga rozpocząć dzień.
-                </p>
+              <div className="mt-6 flex flex-wrap gap-3 text-sm text-[#6a4426]">
+                <span className="rounded-full border border-[#a47b4c]/30 bg-[#fff9ed]/85 px-4 py-2">
+                  Pismo z latin-ext
+                </span>
+                <span className="rounded-full border border-[#a47b4c]/30 bg-[#fff9ed]/85 px-4 py-2">
+                  Polskie znaki: ąćęłńóśźż / ĄĆĘŁŃÓŚŹŻ
+                </span>
               </div>
-            )}
-        </section>
+            </div>
 
-        <section className="rounded-[34px] border border-white/10 bg-white/5 px-6 py-8 text-center shadow-lg shadow-[#140817]/50 backdrop-blur-lg sm:px-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#ffd59a]">
-            Poprzednie wersje
-          </p>
-          <h3 className="mt-3 font-heading text-2xl text-white sm:text-3xl">
-            Zajrzyj do wcześniejszych motywów
-          </h3>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              href="/versions/initial"
-              className="rounded-full border border-white/25 bg-[#2b1539]/70 px-5 py-2 text-sm font-semibold text-[#ffe7b3] shadow-md shadow-[#0b050f]/50 transition hover:bg-[#3b1a3b]"
-            >
-              Pierwsza wersja
-            </Link>
-            <Link
-              href="/versions/frozen"
-              className="rounded-full border border-white/25 bg-[#2b1539]/70 px-5 py-2 text-sm font-semibold text-[#ffe7b3] shadow-md shadow-[#0b050f]/50 transition hover:bg-[#3b1a3b]"
-            >
-              Kraina Lodu
-            </Link>
-            <Link
-              href="/versions/halloween"
-              className="rounded-full border border-white/25 bg-[#2b1539]/70 px-5 py-2 text-sm font-semibold text-[#ffe7b3] shadow-md shadow-[#0b050f]/50 transition hover:bg-[#3b1a3b]"
-            >
-              Halloween
-            </Link>
+            <aside className="relative overflow-hidden rounded-[28px] border border-[#8e6234]/30 bg-[linear-gradient(180deg,rgba(255,249,234,0.96),rgba(238,220,183,0.92))] p-6 shadow-inner shadow-[#d9b67a]/20">
+              <div className="absolute inset-x-6 top-6 h-px bg-gradient-to-r from-transparent via-[#a67a46]/40 to-transparent" />
+              <div className="relative z-10 flex flex-col items-start">
+                <div className="mx-auto h-28 w-28 sm:h-32 sm:w-32">
+                  <ManuscriptSealIllustration />
+                </div>
+
+                <p className="mt-4 text-xs font-semibold uppercase tracking-[0.32em] text-[#8d6234]">
+                  Zapis kronikarza
+                </p>
+                <p className="font-heading mt-3 text-3xl text-[#4b2c18] sm:text-4xl">
+                  {completedCount} z {ROUTINE_STEPS.length}
+                </p>
+                <p className="mt-2 text-sm leading-7 text-[#684226]">
+                  {allDone
+                    ? "Wszystkie karty zostały opatrzone pieczęcią. Dzień może się rozpocząć."
+                    : `Najbliższa karta do odczytania: ${nextStep?.title}.`}
+                </p>
+
+                <div className="mt-5 h-3 w-full overflow-hidden rounded-full bg-[#ceb186]/55">
+                  <div
+                    className="h-full rounded-full bg-[linear-gradient(90deg,#8e5828_0%,#c4903d_50%,#f3dea2_100%)] transition-all duration-500"
+                    style={{ width: `${progressPercent}%` }}
+                    aria-hidden
+                  />
+                </div>
+
+                <div className="mt-5 grid w-full gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                  <StatChip
+                    label="Ukończono"
+                    value={`${completedCount}`}
+                    accent="bg-[#fff6e4]"
+                  />
+                  <StatChip
+                    label="Pozostało"
+                    value={`${remainingCount}`}
+                    accent="bg-[#f6ebd1]"
+                  />
+                </div>
+              </div>
+            </aside>
+          </header>
+
+          <div className="ornament-divider my-8" aria-hidden>
+            <span className="h-3 w-3 rotate-45 border border-[#9f7b4a]/60 bg-[#f6e9c8]" />
           </div>
-        </section>
+
+          <section className="grid gap-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.85fr)]">
+            <div className="space-y-4">
+              {ROUTINE_STEPS.map((step, index) => {
+                const isComplete = completionState[step.id];
+                const burstKey = `${step.id}-${burstState[step.id] ?? 0}`;
+                const stepNumber = `${index + 1}`.padStart(2, "0");
+
+                return (
+                  <button
+                    key={step.id}
+                    type="button"
+                    aria-pressed={isComplete}
+                    onClick={() => handleTileToggle(step.id)}
+                    className={`group relative flex w-full flex-col gap-4 overflow-hidden rounded-[26px] border px-5 py-5 text-left transition duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#8b5a2b] sm:px-6 ${
+                      isComplete
+                        ? "border-[#8f6b33]/40 bg-[linear-gradient(135deg,rgba(251,243,220,0.98),rgba(232,208,162,0.94))] shadow-[0_16px_36px_rgba(133,90,32,0.18)]"
+                        : "border-[#8f6b33]/25 bg-[rgba(255,250,238,0.74)] hover:-translate-y-0.5 hover:shadow-[0_16px_36px_rgba(133,90,32,0.16)]"
+                    }`}
+                  >
+                    <div className="absolute inset-y-0 right-0 w-20 bg-[linear-gradient(90deg,rgba(255,255,255,0),rgba(181,139,68,0.08))]" />
+
+                    <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center">
+                      <div className="flex items-start gap-4">
+                        <div
+                          className={`relative flex h-[4.5rem] w-[4.5rem] shrink-0 items-center justify-center rounded-[22px] bg-gradient-to-br p-[1px] shadow-[0_10px_24px_rgba(89,55,23,0.22)] sm:h-20 sm:w-20 ${step.accent}`}
+                        >
+                          <div className="flex h-full w-full items-center justify-center rounded-[21px] bg-[#f7ecd2]">
+                            <StepIcon
+                              name={step.icon}
+                              className="h-9 w-9 text-[#6a4020] sm:h-10 sm:w-10"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[#8c6435]">
+                              Karta {stepNumber}
+                            </p>
+                            <span className="rounded-full border border-[#b38b58]/25 bg-[#fff8ea]/80 px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[#7d5528]">
+                              {isComplete
+                                ? "Pieczęć odbita"
+                                : "Czeka na pieczęć"}
+                            </span>
+                          </div>
+
+                          <h2 className="font-heading mt-2 text-2xl text-[#4a2c18] sm:text-[2rem]">
+                            {step.title}
+                          </h2>
+                          <p className="mt-1 text-base leading-7 text-[#654126]">
+                            {step.description}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-3 sm:ml-auto">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#9f7b4a]/35 bg-[#fff8e8] font-heading text-xl text-[#7d4d26] shadow-inner shadow-[#d8bc8d]/20">
+                          {step.initial}
+                        </div>
+                        <span className="text-xs font-semibold uppercase tracking-[0.24em] text-[#7d5528] sm:text-sm">
+                          {isComplete ? "Odczytane" : "Dotknij, aby odczytać"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {isComplete ? (
+                      <div key={burstKey} className="seal-burst" aria-hidden>
+                        {Array.from({ length: 8 }).map((_, burstIndex) => (
+                          <span key={burstIndex} />
+                        ))}
+                      </div>
+                    ) : null}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex flex-col gap-6">
+              <section className="rounded-[26px] border border-[#8f6b33]/25 bg-[rgba(255,248,234,0.86)] p-6 shadow-[0_18px_40px_rgba(94,61,27,0.14)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#8d6234]">
+                  Margines kroniki
+                </p>
+                <h2 className="font-heading mt-3 text-3xl text-[#4b2c18]">
+                  Dzisiejszy stan zapisu
+                </h2>
+                <p className="mt-3 text-base leading-7 text-[#654126]">
+                  {allDone
+                    ? "Każdy poranny zwyczaj został zapisany i opieczętowany. Pergamin jest kompletny."
+                    : `Do końca zostało jeszcze ${remainingCount} ${
+                        getPolishCountWord(
+                          remainingCount,
+                          "zadanie",
+                          "zadania",
+                          "zadań"
+                        )
+                      }. Najbliższa karta prowadzi do kroku: ${nextStep?.title}.`}
+                </p>
+
+                <div className="mt-5 rounded-[20px] border border-[#b8935f]/25 bg-[#fff9ec]/80 px-4 py-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b6234]">
+                    Podpowiedź
+                  </p>
+                  <p className="mt-2 text-sm leading-7 text-[#684226]">
+                    Każde kliknięcie odciska pieczęć. Ponowne kliknięcie zdejmuje
+                    ją, jeśli chcesz poprawić zapis.
+                  </p>
+                </div>
+              </section>
+
+              <section className="relative">
+                {allDone ? (
+                  <RewardCard onReset={resetSteps} />
+                ) : (
+                  <AwaitingSealCard
+                    nextStepTitle={nextStep?.title ?? "Ostatnia karta"}
+                    remainingCount={remainingCount}
+                  />
+                )}
+              </section>
+
+              <section className="rounded-[26px] border border-[#8f6b33]/25 bg-[rgba(255,248,234,0.84)] p-6 shadow-[0_18px_40px_rgba(94,61,27,0.12)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#8d6234]">
+                  Archiwum motywów
+                </p>
+                <h3 className="font-heading mt-3 text-2xl text-[#4a2c18] sm:text-3xl">
+                  Poprzednie karty stylów
+                </h3>
+
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <ArchiveLink href="/versions/initial" label="Pierwsza wersja" />
+                  <ArchiveLink href="/versions/frozen" label="Kraina Lodu" />
+                  <ArchiveLink href="/versions/halloween" label="Halloween" />
+                </div>
+              </section>
+            </div>
+          </section>
+        </div>
       </main>
+    </div>
+  );
+}
+
+function ArchiveLink({ href, label }: { href: string; label: string }) {
+  return (
+    <Link
+      href={href}
+      className="rounded-full border border-[#9a7443]/35 bg-[#fff7e8] px-5 py-2 text-sm font-semibold text-[#6b4323] shadow-[0_8px_20px_rgba(103,67,35,0.12)] transition hover:-translate-y-0.5 hover:bg-[#f7ecd1]"
+    >
+      {label}
+    </Link>
+  );
+}
+
+function StatChip({
+  label,
+  value,
+  accent,
+}: {
+  label: string;
+  value: string;
+  accent: string;
+}) {
+  return (
+    <div className={`rounded-[18px] border border-[#b08a56]/20 px-4 py-3 ${accent}`}>
+      <p className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-[#8c6435]">
+        {label}
+      </p>
+      <p className="font-heading mt-2 text-2xl text-[#4b2c18]">{value}</p>
+    </div>
+  );
+}
+
+function AwaitingSealCard({
+  nextStepTitle,
+  remainingCount,
+}: {
+  nextStepTitle: string;
+  remainingCount: number;
+}) {
+  return (
+    <div className="relative overflow-hidden rounded-[26px] border-2 border-dashed border-[#9b7648]/35 bg-[rgba(250,242,224,0.8)] px-6 py-7 shadow-inner shadow-[#caa56f]/18">
+      <div className="absolute right-4 top-4 h-16 w-16 rounded-full border border-[#b58a56]/25 bg-[#fff7e8]/60" />
+      <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#8d6234]">
+        Pieczęć jutrzenki
+      </p>
+      <h3 className="font-heading mt-3 text-3xl text-[#4b2c18]">
+        Jeszcze {remainingCount}{" "}
+        {getPolishCountWord(remainingCount, "karta", "karty", "kart")}
+      </h3>
+      <p className="mt-2 text-base leading-7 text-[#654126]">
+        Odczytaj pozostałe kroki, a na końcu pergamin odsłoni złocony znak
+        ukończenia.
+      </p>
+      <p className="mt-4 rounded-[18px] border border-[#b8935f]/25 bg-[#fff9ec]/75 px-4 py-3 text-sm font-semibold text-[#7d5528]">
+        Najbliższa karta: {nextStepTitle}
+      </p>
     </div>
   );
 }
@@ -335,260 +477,242 @@ type RewardCardProps = {
 
 function RewardCard({ onReset }: RewardCardProps) {
   return (
-    <div className="relative overflow-hidden rounded-[34px] border border-white/15 bg-gradient-to-br from-[#2b1539]/85 via-[#3b1a3b]/90 to-[#ff9a7d]/75 px-6 py-9 text-center shadow-2xl shadow-[#0b050f]/70 backdrop-blur">
-      <RewardConfetti />
-      <div className="relative z-10 flex flex-col items-center gap-3">
-        <span className="text-sm font-semibold uppercase tracking-[0.5em] text-[#ffd59a]">
-          Noworoczny start
-        </span>
-        <MidnightBadgeIcon className="h-16 w-16 text-white" />
-        <h3 className="font-heading text-3xl font-semibold text-white sm:text-4xl">
-          Królowa poranka!
+    <div className="relative overflow-hidden rounded-[28px] border border-[#8e6234]/35 bg-[linear-gradient(135deg,rgba(88,54,28,0.96),rgba(126,86,40,0.94),rgba(194,148,67,0.88))] px-6 py-8 text-[#fff7e2] shadow-[0_22px_50px_rgba(88,54,19,0.32)]">
+      <RewardGilding />
+
+      <div className="relative z-10 flex flex-col items-start gap-3 text-left">
+        <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#f2d690]">
+          Pieczęć jutrzenki
+        </p>
+        <SealBadgeIcon className="h-16 w-16 text-[#fff1c8]" />
+        <h3 className="font-heading text-3xl text-[#fff7e2] sm:text-4xl">
+          Kodeks ukończony
         </h3>
-        <p className="text-sm text-[#f9e6c7] sm:text-base">
-          Wszystko gotowe — czas ruszyć w dzień z energią i uśmiechem.
+        <p className="text-base leading-7 text-[#fff0cf]">
+          Wszystkie rytuały są gotowe. Można ruszać w dzień z porządkiem,
+          spokojem i pełnym ekwipunkiem.
         </p>
         <button
           type="button"
           onClick={onReset}
-          className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/30 bg-[#2b1539]/70 px-5 py-2 text-sm font-semibold text-[#ffd59a] shadow-md shadow-[#0b050f]/60 transition hover:bg-[#3b1a3b]"
+          className="mt-3 inline-flex items-center rounded-full border border-[#f0d89b]/40 bg-[#fff2ce]/12 px-5 py-2 text-sm font-semibold text-[#fff2ce] transition hover:bg-[#fff2ce]/20"
         >
-          Zrób poranek jeszcze raz
+          Spisz kodeks od nowa
         </button>
       </div>
     </div>
   );
 }
 
-function FireworkIcon({ className }: IconProps) {
+function RewardGilding() {
   return (
-    <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
-      <g
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M32 7v15" />
-        <path d="M32 42v15" />
-        <path d="M7 32h15" />
-        <path d="M42 32h15" />
-        <path d="M14 15l9 9" />
-        <path d="M41 40l9 9" />
-        <path d="M50 15l-9 9" />
-        <path d="M23 40l-9 9" />
-        <path d="M26 32c2-3 6-4 10-2 2 1 4 3 4 5" />
-      </g>
-      <circle cx="30" cy="30" r="3" fill="currentColor" opacity="0.6" />
-      <circle cx="36" cy="36" r="2" fill="currentColor" opacity="0.5" />
-    </svg>
-  );
-}
-
-function ToastIcon({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
-      <g
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M12 18h14l-2 20c0 7-4 10-8 10s-8-3-8-10l-2-20Z" />
-        <path d="M38 18h14l-2 20c0 7-4 10-8 10s-8-3-8-10l-2-20Z" />
-        <path d="M14 16l10 10m16-10l-10 10" />
-        <path d="M20 20c1 6 1 12 0 18" />
-        <path d="M44 20c1 6 1 12 0 18" />
-      </g>
-      <circle cx="22" cy="40" r="2" fill="currentColor" opacity="0.6" />
-      <circle cx="42" cy="40" r="2" fill="currentColor" opacity="0.6" />
-    </svg>
-  );
-}
-
-function SparkleIcon({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
-      <g
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M32 9l4 11 11 4-11 4-4 11-4-11-11-4 11-4Z" />
-        <path d="M48 32l2 6 6 2-6 2-2 6-2-6-6-2 6-2Z" />
-        <path d="M16 36l2 4 4 2-4 2-2 4-2-4-4-2 4-2Z" />
-      </g>
-      <circle cx="24" cy="22" r="2" fill="currentColor" opacity="0.5" />
-      <circle cx="42" cy="44" r="2" fill="currentColor" opacity="0.6" />
-    </svg>
-  );
-}
-
-function MaskIcon({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
-      <g
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M12 26c7-8 16-12 20-12s13 4 20 12c-2 14-11 22-20 22S14 40 12 26Z" />
-        <path d="M22 28c3 0 6 3 6 6m8-6c3 0 6 3 6 6" />
-        <path d="M8 22l6 4m42-4l-6 4" />
-        <path d="M18 34c4 4 8 6 14 6s10-2 14-6" />
-      </g>
-      <circle cx="24" cy="30" r="2" fill="currentColor" opacity="0.5" />
-      <circle cx="40" cy="30" r="2" fill="currentColor" opacity="0.5" />
-    </svg>
-  );
-}
-
-function ConfettiIcon({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
-      <g
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M16 44l12-28 20 12-12 28Z" />
-        <path d="M30 26l8 4" />
-        <path d="M22 40l6-14" />
-      </g>
-      <circle cx="42" cy="20" r="4" fill="currentColor" opacity="0.7" />
-      <circle cx="50" cy="30" r="3" fill="currentColor" opacity="0.6" />
-      <circle cx="18" cy="18" r="3" fill="currentColor" opacity="0.6" />
-    </svg>
-  );
-}
-
-function WishIcon({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
-      <g
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M44 24a12 12 0 1 1-10-14 12 12 0 0 0 10 14Z" />
-        <path d="M28 30l3 8 8 3-8 3-3 8-3-8-8-3 8-3Z" />
-      </g>
-      <circle cx="46" cy="38" r="3" fill="currentColor" opacity="0.6" />
-      <circle cx="22" cy="22" r="2" fill="currentColor" opacity="0.5" />
-    </svg>
-  );
-}
-
-function MidnightBadgeIcon({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 72 72" aria-hidden className={className} fill="none">
-      <circle cx="36" cy="36" r="32" fill="#2b1539" />
-      <circle cx="36" cy="34" r="24" fill="#ffb07c" opacity="0.3" />
-      <g
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M36 16l6 12 14 2-10 10 2 14-12-6-12 6 2-14-10-10 14-2Z" />
-        <path d="M28 40c4 2 12 2 16 0" />
-      </g>
-      <circle cx="36" cy="34" r="6" fill="currentColor" opacity="0.7" />
-      <circle cx="24" cy="28" r="3" fill="currentColor" opacity="0.5" />
-    </svg>
-  );
-}
-
-function RewardConfetti() {
-  return (
-    <div className="reward-confetti">
-      {Array.from({ length: 20 }).map((_, index) => {
-        const color = confettiColors[index % confettiColors.length];
-        const positions = ["10%", "40%", "70%"];
-        const style: ConfettiStyle = {
+    <div className="reward-gilding">
+      {Array.from({ length: 18 }).map((_, index) => {
+        const color = gildingColors[index % gildingColors.length];
+        const style: GildingStyle = {
           "--i": index.toString(),
-          "--confetti-color": color,
-          left: `${(index * 9) % 100}%`,
-          top: positions[index % positions.length],
+          "--flake-color": color,
+          left: `${6 + ((index * 11) % 88)}%`,
+          top: `${20 + ((index * 7) % 48)}%`,
         };
+
         return <span key={index} style={style} />;
       })}
     </div>
   );
 }
 
-function FireworksBackground() {
+function ManuscriptBackground() {
   return (
-    <div className="spark-field">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#09050f] via-[#1b0d2e] to-[#2b1539]" />
-      <div className="absolute -left-20 top-6 h-72 w-72 rounded-full bg-[#ffb07c]/20 blur-3xl sm:h-96 sm:w-96" />
-      <div className="absolute -right-24 top-16 h-64 w-64 rounded-full bg-[#ff8c8c]/15 blur-3xl sm:h-96 sm:w-96" />
-      <div className="absolute inset-x-12 bottom-0 h-64 rounded-full bg-[#ffd59a]/10 blur-[140px]" />
-      <div className="fireworks-sky">
-        {FIREWORKS.map((style, index) => (
-          <div key={index} className="firework" style={style}>
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-          </div>
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,248,232,0.95),rgba(255,248,232,0.18)_24%,rgba(255,248,232,0)_42%)]" />
+      <div className="absolute -left-24 top-16 h-72 w-72 rounded-full bg-[#b07a3b]/10 blur-[100px]" />
+      <div className="absolute right-0 top-0 h-80 w-80 rounded-full bg-[#7c2e18]/8 blur-[120px]" />
+      <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-[linear-gradient(180deg,transparent,rgba(156,117,63,0.18),transparent)]" />
+      <div className="manuscript-dust">
+        {FLOATING_MOTES.map((style, index) => (
+          <span key={index} className="dust-mote" style={style} />
         ))}
       </div>
     </div>
   );
 }
 
-function MorningBuddyIllustration() {
+function FrameOrnaments() {
+  return (
+    <div className="pointer-events-none absolute inset-0" aria-hidden>
+      <div className="absolute inset-4 rounded-[28px] border border-[#a87d47]/25" />
+      <div className="absolute inset-[18px] rounded-[24px] border border-[#fff6df]/55" />
+      <span className="absolute left-3 top-3 h-14 w-14 rounded-tl-[28px] border-l-2 border-t-2 border-[#8b5a2b]/35" />
+      <span className="absolute right-3 top-3 h-14 w-14 rounded-tr-[28px] border-r-2 border-t-2 border-[#8b5a2b]/35" />
+      <span className="absolute bottom-3 left-3 h-14 w-14 rounded-bl-[28px] border-b-2 border-l-2 border-[#8b5a2b]/35" />
+      <span className="absolute bottom-3 right-3 h-14 w-14 rounded-br-[28px] border-b-2 border-r-2 border-[#8b5a2b]/35" />
+    </div>
+  );
+}
+
+function SunIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
+      <g
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <circle cx="32" cy="32" r="10" />
+        <path d="M32 8v8" />
+        <path d="M32 48v8" />
+        <path d="M8 32h8" />
+        <path d="M48 32h8" />
+        <path d="M15 15l6 6" />
+        <path d="M43 43l6 6" />
+        <path d="M49 15l-6 6" />
+        <path d="M21 43l-6 6" />
+      </g>
+    </svg>
+  );
+}
+
+function WaterIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
+      <g
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M18 18h28l-4 22H22l-4-22Z" />
+        <path d="M16 18c4-4 10-6 16-6s12 2 16 6" />
+        <path d="M24 48c3 2 5 4 8 4s5-2 8-4" />
+        <path d="M24 28c2 2 4 3 8 3s6-1 8-3" />
+      </g>
+    </svg>
+  );
+}
+
+function BrushIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
+      <g
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M14 40 38 16" />
+        <path d="m38 16 10 10" />
+        <path d="M16 42c-4 4-4 8-2 10s6 2 10-2l4-4-8-8-4 4Z" />
+        <path d="M46 14l4-4" />
+        <path d="M50 26l4-4" />
+      </g>
+    </svg>
+  );
+}
+
+function CloakIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
+      <g
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M24 14c2-3 6-5 8-5s6 2 8 5l6 36H18l6-36Z" />
+        <path d="M24 14c2 4 5 6 8 6s6-2 8-6" />
+        <path d="M28 28v22" />
+        <path d="M36 28v22" />
+      </g>
+    </svg>
+  );
+}
+
+function FeastIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
+      <g
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M14 40c4-10 10-14 18-14s14 4 18 14" />
+        <path d="M18 40h28a6 6 0 0 1 0 12H18a6 6 0 0 1 0-12Z" />
+        <path d="M24 18c0 4 2 8 6 8" />
+        <path d="M34 12v14" />
+        <path d="M42 16c0 4-2 8-6 8" />
+      </g>
+    </svg>
+  );
+}
+
+function SatchelIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden className={className} fill="none">
+      <g
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M18 22h28l-2 26H20l-2-26Z" />
+        <path d="M24 22c0-6 4-10 8-10s8 4 8 10" />
+        <path d="M18 26c4 6 10 9 14 9s10-3 14-9" />
+        <path d="M28 34h8" />
+      </g>
+    </svg>
+  );
+}
+
+function SealBadgeIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 72 72" aria-hidden className={className} fill="none">
+      <circle cx="36" cy="36" r="28" fill="currentColor" opacity="0.15" />
+      <g
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M36 14l6 10 12 2-8 8 2 12-12-6-12 6 2-12-8-8 12-2Z" />
+        <path d="M28 36c2 3 4 5 8 5s6-2 8-5" />
+      </g>
+    </svg>
+  );
+}
+
+function ManuscriptSealIllustration() {
   return (
     <svg
       viewBox="0 0 140 140"
       xmlns="http://www.w3.org/2000/svg"
-      className="h-full w-full drop-shadow-[0_12px_32px_rgba(255,179,122,0.45)]"
+      className="h-full w-full drop-shadow-[0_14px_28px_rgba(154,110,48,0.18)]"
     >
       <defs>
-        <linearGradient id="nySky" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#24102d" />
-          <stop offset="100%" stopColor="#ff9f74" />
+        <linearGradient id="sealGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#f5de9d" />
+          <stop offset="100%" stopColor="#b67d30" />
         </linearGradient>
       </defs>
-      <rect width="140" height="140" rx="36" fill="url(#nySky)" />
+      <circle cx="70" cy="70" r="54" fill="#f8edd3" stroke="#b68b4d" strokeWidth="3" />
+      <circle cx="70" cy="70" r="42" fill="url(#sealGlow)" opacity="0.28" />
       <g
-        stroke="#fff1d6"
+        fill="none"
+        stroke="#6f421e"
         strokeWidth="3"
         strokeLinecap="round"
         strokeLinejoin="round"
-        fill="none"
       >
-        <path d="M14 112L36 86l16 18 18-30 28 38" />
-        <path d="M40 96v-36h14v36" />
-        <path d="M60 98v-46h22v46" />
-        <path d="M86 102v-28h14v28" />
-        <path d="M40 60h42" />
-        <path d="M66 40l6 12h-12Z" />
+        <path d="M40 84V42h60v42" />
+        <path d="M48 42c4 6 11 10 22 10s18-4 22-10" />
+        <path d="M52 88h36" />
+        <path d="M54 68h32" />
+        <path d="M70 30v12" />
+        <path d="M58 34h24" />
       </g>
-      <g fill="#fff1d6" opacity="0.85">
-        <circle cx="72" cy="34" r="5" />
-        <circle cx="30" cy="92" r="4" />
-        <circle cx="108" cy="82" r="6" />
-      </g>
-      <g stroke="#fff1d6" strokeWidth="2.5" strokeLinecap="round">
-        <path d="M96 28l8 6" />
-        <path d="M102 24l-2 10" />
-        <path d="M30 26l6 4" />
-        <path d="M36 22l-2 8" />
-      </g>
+      <circle cx="70" cy="69" r="6" fill="#8a5327" opacity="0.72" />
     </svg>
   );
 }

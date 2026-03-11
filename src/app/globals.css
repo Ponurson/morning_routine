@@ -1,9 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: dark;
-  --background: #020b1c;
-  --foreground: #f5fbff;
+  color-scheme: light;
+  --background: #f4e7c8;
+  --foreground: #452715;
+  --parchment: #f8efdc;
+  --ink: #4b2c18;
+  --gold: #b88734;
 }
 
 @theme inline {
@@ -13,152 +16,268 @@
   --font-display: var(--font-heading);
 }
 
+html {
+  background: var(--background);
+}
+
 body {
-  font-family: var(--font-body), "Nunito", "Segoe UI", sans-serif;
+  position: relative;
   min-height: 100vh;
   margin: 0;
   color: var(--foreground);
-  background: linear-gradient(180deg, #020b1c 0%, #041a3d 45%, #0b3561 100%);
+  font-family: var(--font-body), "Noto Serif", "Iowan Old Style", "Georgia",
+    serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  background:
+    radial-gradient(circle at top, rgba(255, 248, 228, 0.9), transparent 34%),
+    radial-gradient(
+      circle at bottom left,
+      rgba(176, 122, 59, 0.16),
+      transparent 32%
+    ),
+    linear-gradient(180deg, #f8efd9 0%, #ead6af 48%, #dcc096 100%);
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+body::before {
+  opacity: 0.4;
+  background:
+    radial-gradient(circle at 18% 16%, rgba(102, 64, 24, 0.14) 0 2px, transparent 3px),
+    radial-gradient(circle at 82% 14%, rgba(102, 64, 24, 0.1) 0 1px, transparent 2px),
+    radial-gradient(circle at 32% 74%, rgba(102, 64, 24, 0.08) 0 2px, transparent 3px),
+    radial-gradient(circle at 76% 80%, rgba(102, 64, 24, 0.1) 0 1px, transparent 2px),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0) 48%,
+      rgba(98, 66, 31, 0.05) 100%
+    );
+  mix-blend-mode: multiply;
+}
+
+body::after {
+  box-shadow: inset 0 0 140px rgba(100, 58, 22, 0.16);
 }
 
 .font-heading {
-  font-family: var(--font-heading), "Baloo 2", "Segoe UI", cursive;
+  font-family: var(--font-heading), "Noto Serif", "Georgia", serif;
+  letter-spacing: 0.02em;
 }
 
-.snowfall {
+::selection {
+  background: rgba(184, 135, 52, 0.28);
+  color: #2f1708;
+}
+
+.manuscript-dust {
   pointer-events: none;
   position: absolute;
   inset: 0;
   overflow: hidden;
 }
 
-.snowflake {
+.dust-mote {
   position: absolute;
-  top: -10%;
+  width: 10px;
+  height: 10px;
   border-radius: 9999px;
   background: radial-gradient(
     circle,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(255, 255, 255, 0.05) 70%
+    rgba(255, 240, 192, 0.95) 0%,
+    rgba(255, 240, 192, 0.25) 42%,
+    rgba(255, 240, 192, 0) 74%
   );
-  animation: snowfall linear infinite;
-  filter: drop-shadow(0 0 8px rgba(155, 219, 255, 0.7));
-  opacity: 0.85;
+  opacity: 0.7;
+  filter: blur(0.2px);
+  animation: drift-mote 8s ease-in-out infinite;
 }
 
-@keyframes snowfall {
-  0% {
-    transform: translate3d(0, -10%, 0) scale(0.6);
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.85;
-  }
+.dust-mote:nth-child(3n) {
+  width: 7px;
+  height: 7px;
+  opacity: 0.45;
+}
+
+.dust-mote:nth-child(4n) {
+  width: 14px;
+  height: 14px;
+  opacity: 0.3;
+}
+
+@keyframes drift-mote {
+  0%,
   100% {
-    transform: translate3d(-8px, 110vh, 0) scale(1);
-    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.92);
+  }
+  50% {
+    transform: translate3d(14px, -18px, 0) scale(1.14);
   }
 }
 
-.reward-confetti {
+.illuminated-initial {
+  float: left;
+  margin: 0.08em 0.18em 0 0;
+  padding: 0.12em 0.26em 0.02em;
+  border-radius: 0.55rem;
+  border: 1px solid rgba(126, 79, 31, 0.28);
+  background: linear-gradient(
+    135deg,
+    rgba(195, 151, 74, 0.28),
+    rgba(255, 248, 231, 0.92)
+  );
+  color: #7b3319;
+  font-family: var(--font-heading), "Noto Serif", "Georgia", serif;
+  font-size: 3.4rem;
+  line-height: 0.86;
+  box-shadow: 0 10px 24px rgba(111, 72, 27, 0.16);
+}
+
+.ornament-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ornament-divider::before,
+.ornament-divider::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(141, 98, 52, 0.6),
+    transparent
+  );
+}
+
+.reward-gilding {
   pointer-events: none;
   position: absolute;
   inset: 0;
   overflow: hidden;
 }
 
-.reward-confetti span {
+.reward-gilding span {
   position: absolute;
-  width: 8px;
+  width: 10px;
   height: 18px;
   border-radius: 9999px;
   opacity: 0;
   transform: translate3d(0, 20px, 0) rotate(0deg);
-  background: var(--confetti-color);
-  box-shadow: 0 0 12px rgba(255, 255, 255, 0.35);
-  animation: confetti-pop 3.6s ease-in-out infinite;
-  animation-delay: calc(var(--i) * 0.18s);
+  background: var(--flake-color);
+  box-shadow: 0 0 14px rgba(219, 184, 96, 0.4);
+  animation: gilding-rise 3.2s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.14s);
 }
 
-@keyframes confetti-pop {
+.reward-gilding span:nth-child(odd) {
+  width: 8px;
+  height: 14px;
+}
+
+@keyframes gilding-rise {
   0% {
     opacity: 0;
-    transform: translate3d(0, 40px, 0) rotate(-8deg);
+    transform: translate3d(0, 26px, 0) rotate(-12deg);
   }
-  30% {
+  26% {
     opacity: 1;
-    transform: translate3d(-6px, -6px, 0) rotate(6deg);
   }
   60% {
-    opacity: 0.9;
-    transform: translate3d(8px, -48px, 0) rotate(-10deg);
+    opacity: 0.85;
+    transform: translate3d(8px, -28px, 0) rotate(10deg);
   }
   100% {
     opacity: 0;
-    transform: translate3d(-12px, -90px, 0) rotate(16deg);
+    transform: translate3d(-10px, -76px, 0) rotate(18deg);
   }
 }
 
-.step-slider {
-  appearance: none;
-  width: 100%;
-  height: 32px;
-  background: transparent;
-  cursor: pointer;
-  --progress: 0%;
+.seal-burst {
+  pointer-events: none;
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  width: 64px;
+  height: 64px;
+  opacity: 0;
+  animation: seal-bloom 0.9s ease-out forwards;
 }
 
-.step-slider:focus-visible {
-  outline: none;
-}
-
-.step-slider::-webkit-slider-runnable-track {
-  height: 14px;
+.seal-burst span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3px;
+  height: 18px;
   border-radius: 9999px;
-  border: 1px solid rgba(154, 215, 255, 0.5);
   background: linear-gradient(
-    90deg,
-    #9ad7ff var(--progress),
-    rgba(255, 255, 255, 0.08) var(--progress)
+    180deg,
+    rgba(240, 223, 172, 0.98) 0%,
+    rgba(167, 96, 36, 0.08) 100%
   );
+  transform-origin: center 22px;
+  opacity: 0.9;
 }
 
-.step-slider::-webkit-slider-thumb {
-  appearance: none;
-  width: 28px;
-  height: 28px;
-  border-radius: 9999px;
-  background: #0f2d52;
-  border: 3px solid #9ad7ff;
-  box-shadow: 0 10px 24px rgba(12, 40, 78, 0.45);
-  margin-top: -8px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.seal-burst span:nth-child(1) {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+.seal-burst span:nth-child(2) {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.seal-burst span:nth-child(3) {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+.seal-burst span:nth-child(4) {
+  transform: translate(-50%, -50%) rotate(135deg);
+}
+.seal-burst span:nth-child(5) {
+  transform: translate(-50%, -50%) rotate(180deg);
+}
+.seal-burst span:nth-child(6) {
+  transform: translate(-50%, -50%) rotate(225deg);
+}
+.seal-burst span:nth-child(7) {
+  transform: translate(-50%, -50%) rotate(270deg);
+}
+.seal-burst span:nth-child(8) {
+  transform: translate(-50%, -50%) rotate(315deg);
 }
 
-.step-slider:active::-webkit-slider-thumb {
-  transform: scale(1.05);
-  box-shadow: 0 12px 28px rgba(12, 40, 78, 0.6);
+@keyframes seal-bloom {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.4);
+  }
 }
 
-.step-slider::-moz-range-track {
-  height: 14px;
-  border-radius: 9999px;
-  border: 1px solid rgba(154, 215, 255, 0.5);
-  background: rgba(255, 255, 255, 0.08);
-}
+@media (max-width: 640px) {
+  .illuminated-initial {
+    font-size: 2.6rem;
+  }
 
-.step-slider::-moz-range-progress {
-  height: 14px;
-  border-radius: 9999px;
-  background: #9ad7ff;
-}
-
-.step-slider::-moz-range-thumb {
-  width: 28px;
-  height: 28px;
-  border-radius: 9999px;
-  background: #0f2d52;
-  border: 3px solid #9ad7ff;
-  box-shadow: 0 10px 24px rgba(12, 40, 78, 0.45);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  .seal-burst {
+    right: 14px;
+    top: 14px;
+    width: 54px;
+    height: 54px;
+  }
 }
