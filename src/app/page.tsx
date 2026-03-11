@@ -398,6 +398,12 @@ export default function Home() {
                 <h3 className="font-heading mt-3 text-2xl text-[#4a2c18] sm:text-3xl">
                   Poprzednie karty stylów
                 </h3>
+                <Link
+                  href="/versions/sylwestrowy"
+                  className="mt-5 inline-flex items-center rounded-full border border-[#9a6b30]/40 bg-[linear-gradient(135deg,#8e5828,#c78d3d)] px-5 py-3 text-sm font-semibold text-[#fff5dc] shadow-[0_12px_28px_rgba(121,76,28,0.2)] transition hover:-translate-y-0.5 hover:brightness-105"
+                >
+                  Przełącz na styl sylwestrowy
+                </Link>
 
                 <div className="mt-5 flex flex-wrap gap-3">
                   <ArchiveLink href="/versions/initial" label="Pierwsza wersja" />
