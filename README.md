@@ -1,3 +1,18 @@
+# Morning Routine
+
+Aplikacja: [wersja Halloween](https://ponurson.github.io/morning_routine/versions/halloween).
+
+## Repozytorium i Super Jirka
+
+- GitHub: [Ponurson/morning_routine](https://github.com/Ponurson/morning_routine)
+- Główna gałąź: `main`
+- Super Jirka: projekt `Morning_routine`, ID `2126`
+- Katalog roboczy: `/home/pi/download_upload_app/storage/Morning_routine`
+- Baza aplikacji: `src/app/versions/halloween/page.tsx`
+
+Lokalny `origin` wskazuje repozytorium GitHub, a pole `repo` projektu
+w Super Jirce ma wartość `Ponurson/morning_routine`.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
