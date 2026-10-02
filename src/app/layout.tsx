@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Noto_Serif } from "next/font/google";
+import { Baloo_2, Cormorant_Garamond, Noto_Serif } from "next/font/google";
 import "./globals.css";
 
 const heading = Cormorant_Garamond({
@@ -16,10 +16,16 @@ const body = Noto_Serif({
   display: "swap",
 });
 
+const candy = Baloo_2({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-candy",
+  weight: ["500", "600", "700", "800"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "Poranny Kodeks",
-  description:
-    "Pergaminowa karta porannej rutyny z pełnym wsparciem dla polskich znaków.",
+  title: "Mój poranek",
+  description: "Małe kroki do wielkich przygód — poranna rutyna dla dzieci.",
 };
 
 export default function RootLayout({
@@ -29,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pl">
-      <body className={`${heading.variable} ${body.variable} antialiased`}>
+      <body className={`${heading.variable} ${body.variable} ${candy.variable} antialiased`}>
         {children}
       </body>
     </html>
