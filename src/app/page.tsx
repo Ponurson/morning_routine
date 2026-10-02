@@ -5,11 +5,11 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import wakeImg from "./assets/wake.webp";
-import washImg from "./assets/wash.webp";
+import pottyImg from "./assets/potty.webp";
 import teethImg from "./assets/teeth.webp";
 import dressImg from "./assets/dress.webp";
 import breakfastImg from "./assets/breakfast.webp";
-import bagImg from "./assets/bag.webp";
+import hairImg from "./assets/hair.webp";
 import foxImg from "./assets/fox.webp";
 
 type RoutineStep = {
@@ -21,11 +21,11 @@ type RoutineStep = {
 
 const ROUTINE_STEPS: RoutineStep[] = [
   { id: "wake", label: "Wstałem/am", image: wakeImg, tint: "bg-[#fff1d6]" },
-  { id: "wash", label: "Umyłem/am buzię", image: washImg, tint: "bg-[#ffe4ec]" },
+  { id: "potty", label: "Zrobiłem/am siku", image: pottyImg, tint: "bg-[#ffe4ec]" },
   { id: "teeth", label: "Umyłem/am zęby", image: teethImg, tint: "bg-[#e3f0ff]" },
   { id: "dress", label: "Ubrałem/am się", image: dressImg, tint: "bg-[#ffe9f3]" },
   { id: "breakfast", label: "Zjadłem/am śniadanie", image: breakfastImg, tint: "bg-[#fff0dc]" },
-  { id: "bag", label: "Spakowałem/am plecak", image: bagImg, tint: "bg-[#e6f5e4]" },
+  { id: "hair", label: "Uczesałem/am się", image: hairImg, tint: "bg-[#e6f5e4]" },
 ];
 
 const FOX_LINES = [
